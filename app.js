@@ -1,5 +1,5 @@
 // Konfigurasi Contract
-const CONTRACT_ADDRESS = "0xC1465Fdf616F63ba0dFA565Ce918f13feed2b468"; // Ganti dengan alamat contract yang sudah di-deploy
+const CONTRACT_ADDRESS = "0x..."; // Ganti dengan alamat contract yang sudah di-deploy
 const CONTRACT_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"reward","type":"uint256"}],"name":"Claimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Deposited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"referrer","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint8","name":"level","type":"uint8"}],"name":"ReferralReward","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Withdrawn","type":"event"},{"inputs":[],"name":"CLAIM","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_referralCode","type":"string"}],"name":"DEPOSIT","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"WITHDRAW","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"feeReceiver","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"},{"internalType":"uint8","name":"level","type":"uint8"}],"name":"getDownlineCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"},{"internalType":"uint8","name":"level","type":"uint8"}],"name":"getDownlineList","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"},{"internalType":"uint8","name":"level","type":"uint8"}],"name":"getLevelIncome","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"}],"name":"getPendingReward","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"}],"name":"getPendingRewardStaking","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"}],"name":"getReferralCode","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"}],"name":"getTotalInvest","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"userAddr","type":"address"}],"name":"isRegistered","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"minDeposit","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"minWithdraw","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"stateMutability":"payable","type":"receive"}];
 
 // Global Variables
@@ -7,36 +7,60 @@ let provider;
 let signer;
 let contract;
 let userAddress;
+let isConnected = false;
 
 // DOM Elements
 const connectWalletBtn = document.getElementById('connectWallet');
+const heroBtn = document.getElementById('heroBtn');
+const investBtn = document.getElementById('investBtn');
+const connectFromInvest = document.getElementById('connectFromInvest');
+const investContent = document.getElementById('investContent');
+const connectPrompt = document.getElementById('connectPrompt');
+const withdrawRoiBtn = document.getElementById('withdrawRoiBtn');
+const withdrawRefBtn = document.getElementById('withdrawRefBtn');
 
 // Navigation System
 function setupNavigation() {
-    const navLinks = document.querySelectorAll('.nav-links a');
-    const tabContents = document.querySelectorAll('.tab-content');
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const navLinks = document.getElementById('navLinks');
     
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
+    hamburgerMenu.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
+
+    // Smooth scroll untuk navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = link.getAttribute('href').substring(1);
-            
-            // Update active nav link
-            navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            
-            // Show target section
-            tabContents.forEach(content => content.classList.remove('active'));
-            document.getElementById(target).classList.add('active');
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                navLinks.classList.remove('active');
+            }
         });
     });
 }
 
-// Fungsi Utama
+// FAQ System
+function setupFAQ() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+}
+
+// Fungsi Utama Connect Wallet
 async function connectWallet() {
     try {
         if (typeof window.ethereum === 'undefined') {
-            showAlert('Please install MetaMask first!', 'error');
+            alert('Please install MetaMask first!');
             return;
         }
 
@@ -51,18 +75,18 @@ async function connectWallet() {
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
         // Update UI
+        isConnected = true;
         connectWalletBtn.innerHTML = '<i class="fas fa-check"></i> Connected';
         connectWalletBtn.disabled = true;
+        heroBtn.innerHTML = '<i class="fas fa-rocket"></i> Invest Now';
+        
+        // Show invest content, hide connect prompt
+        investContent.style.display = 'block';
+        connectPrompt.style.display = 'none';
 
-        await checkUserStatus();
         await loadUserData();
 
-        // Update navigation to show authenticated sections
-        document.querySelector('.nav-links').innerHTML += `
-            <li><a href="#withdraw"><i class="fas fa-wallet"></i> Withdraw</a></li>
-        `;
-        setupNavigation();
-
+        // Event listeners untuk account changes
         window.ethereum.on('accountsChanged', (accounts) => {
             if (accounts.length === 0) {
                 location.reload();
@@ -73,81 +97,39 @@ async function connectWallet() {
 
     } catch (error) {
         console.error('Error connecting wallet:', error);
-        showAlert('Failed to connect wallet: ' + error.message, 'error');
+        alert('Failed to connect wallet: ' + error.message);
     }
 }
 
-async function checkUserStatus() {
-    try {
-        const isRegistered = await contract.isRegistered(userAddress);
-        const walletInfo = document.getElementById('walletInfo');
-        walletInfo.style.display = 'block';
-        
-        document.getElementById('walletAddress').textContent = 
-            `${userAddress.substring(0, 6)}...${userAddress.substring(38)}`;
-        
-        if (isRegistered) {
-            document.getElementById('registrationStatus').textContent = 'Registered';
-            document.getElementById('registrationStatus').style.color = '#10b981';
-            
-            const referralCode = await contract.getReferralCode(userAddress);
-            document.getElementById('userReferralCode').textContent = referralCode;
-            document.getElementById('referralSection').style.display = 'block';
-            
-        } else {
-            document.getElementById('registrationStatus').textContent = 'Not Registered';
-            document.getElementById('registrationStatus').style.color = '#f59e0b';
-        }
-        
-    } catch (error) {
-        console.error('Error checking user status:', error);
-    }
-}
-
+// Load User Data
 async function loadUserData() {
     try {
+        if (!isConnected) return;
+
         // Load investment data
         const totalInvest = await contract.getTotalInvest(userAddress);
-        document.getElementById('totalInvest').textContent = 
+        document.getElementById('activeDeposit').textContent = 
             ethers.utils.formatEther(totalInvest) + ' BNB';
 
         // Load reward data
         const pendingReward = await contract.getPendingReward(userAddress);
-        document.getElementById('pendingReward').textContent = 
-            ethers.utils.formatEther(pendingReward) + ' BNB';
-
         const pendingStaking = await contract.getPendingRewardStaking(userAddress);
-        document.getElementById('pendingStaking').textContent = 
-            ethers.utils.formatEther(pendingStaking) + ' BNB';
-
-        // Calculate referral reward
         const referralReward = pendingReward.sub(pendingStaking);
-        document.getElementById('pendingReferral').textContent = 
+
+        document.getElementById('roiBonus').textContent = 
+            ethers.utils.formatEther(pendingStaking) + ' BNB';
+        document.getElementById('referralBonus').textContent = 
             ethers.utils.formatEther(referralReward) + ' BNB';
 
-        // Update total balance
-        const totalBalance = parseFloat(ethers.utils.formatEther(totalInvest)) + 
-                           parseFloat(ethers.utils.formatEther(pendingReward));
-        document.getElementById('totalBalance').textContent = 
-            totalBalance.toFixed(4) + ' BNB';
-
-        // Update withdraw section
-        document.getElementById('totalPendingReward').textContent = 
-            ethers.utils.formatEther(pendingReward) + ' BNB';
-        document.getElementById('availableReward').textContent = 
-            ethers.utils.formatEther(pendingReward) + ' BNB';
-
-        // Load referral data if registered
-        const isRegistered = await contract.isRegistered(userAddress);
-        if (isRegistered) {
-            await loadReferralData();
-        }
+        // Load referral data
+        await loadReferralData();
 
     } catch (error) {
         console.error('Error loading user data:', error);
     }
 }
 
+// Load Referral Data
 async function loadReferralData() {
     try {
         for (let i = 1; i <= 5; i++) {
@@ -163,192 +145,126 @@ async function loadReferralData() {
     }
 }
 
-async function deposit() {
+// Invest Function
+async function invest() {
     try {
+        if (!isConnected) {
+            investContent.style.display = 'none';
+            connectPrompt.style.display = 'block';
+            return;
+        }
+
         const depositAmount = document.getElementById('depositAmount').value;
         const referralCode = document.getElementById('referralCodeInput').value;
 
         if (!depositAmount || parseFloat(depositAmount) < 0.01) {
-            showAlert('Minimum deposit is 0.01 BNB', 'error');
+            alert('Minimum deposit is 0.01 BNB');
             return;
         }
 
         const amountInWei = ethers.utils.parseEther(depositAmount);
         
-        const depositBtn = document.getElementById('depositBtn');
-        const originalText = depositBtn.innerHTML;
-        depositBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        depositBtn.disabled = true;
-
-        const depositStatus = document.getElementById('depositStatus');
-        depositStatus.style.display = 'block';
-        depositStatus.className = 'alert alert-info';
-        depositStatus.innerHTML = '<i class="fas fa-info-circle"></i> Sending transaction...';
+        investBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        investBtn.disabled = true;
 
         const tx = await contract.DEPOSIT(referralCode, { value: amountInWei });
-        
-        depositStatus.innerHTML = `<i class="fas fa-info-circle"></i> Waiting for confirmation... Hash: ${tx.hash.substring(0, 10)}...`;
-        
         await tx.wait();
         
-        depositStatus.className = 'alert alert-success';
-        depositStatus.innerHTML = '<i class="fas fa-check-circle"></i> Deposit successful!';
-
+        alert('Investment successful!');
+        
+        // Reset form
         document.getElementById('depositAmount').value = '';
         document.getElementById('referralCodeInput').value = '';
         
+        // Reload data
         await loadUserData();
-        await checkUserStatus();
 
-        setTimeout(() => {
-            depositBtn.innerHTML = originalText;
-            depositBtn.disabled = false;
-            depositStatus.style.display = 'none';
-        }, 3000);
+        investBtn.innerHTML = '<i class="fas fa-rocket"></i> Invest Now';
+        investBtn.disabled = false;
 
     } catch (error) {
-        console.error('Error depositing:', error);
-        
-        const depositBtn = document.getElementById('depositBtn');
-        depositBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Deposit BNB';
-        depositBtn.disabled = false;
-
-        const depositStatus = document.getElementById('depositStatus');
-        depositStatus.style.display = 'block';
-        depositStatus.className = 'alert alert-error';
-        depositStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${error.message}`;
-
-        showAlert('Deposit failed: ' + error.message, 'error');
+        console.error('Error investing:', error);
+        alert('Investment failed: ' + error.message);
+        investBtn.innerHTML = '<i class="fas fa-rocket"></i> Invest Now';
+        investBtn.disabled = false;
     }
 }
 
-async function claimReferral() {
+// Withdraw Functions
+async function withdrawROI() {
     try {
-        const claimBtn = document.getElementById('claimReferralBtn');
-        const originalText = claimBtn.innerHTML;
-        claimBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        claimBtn.disabled = true;
+        if (!isConnected) {
+            alert('Please connect your wallet first');
+            return;
+        }
 
-        const withdrawStatus = document.getElementById('withdrawStatus');
-        withdrawStatus.style.display = 'block';
-        withdrawStatus.className = 'alert alert-info';
-        withdrawStatus.innerHTML = '<i class="fas fa-info-circle"></i> Claiming referral rewards...';
-
-        const tx = await contract.CLAIM();
-        
-        withdrawStatus.innerHTML = `<i class="fas fa-info-circle"></i> Waiting for confirmation... Hash: ${tx.hash.substring(0, 10)}...`;
-        
-        await tx.wait();
-        
-        withdrawStatus.className = 'alert alert-success';
-        withdrawStatus.innerHTML = '<i class="fas fa-check-circle"></i> Referral rewards claimed successfully!';
-
-        await loadUserData();
-
-        setTimeout(() => {
-            claimBtn.innerHTML = originalText;
-            claimBtn.disabled = false;
-            withdrawStatus.style.display = 'none';
-        }, 3000);
-
-    } catch (error) {
-        console.error('Error claiming referral:', error);
-        handleTransactionError(error, 'claimReferralBtn', '<i class="fas fa-users"></i> Claim Referral Rewards');
-        showAlert('Claim referral failed: ' + error.message, 'error');
-    }
-}
-
-async function withdrawStaking() {
-    try {
-        const withdrawBtn = document.getElementById('withdrawStakingBtn');
-        const originalText = withdrawBtn.innerHTML;
-        withdrawBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        withdrawBtn.disabled = true;
-
-        const withdrawStatus = document.getElementById('withdrawStatus');
-        withdrawStatus.style.display = 'block';
-        withdrawStatus.className = 'alert alert-info';
-        withdrawStatus.innerHTML = '<i class="fas fa-info-circle"></i> Withdrawing staking rewards...';
+        withdrawRoiBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        withdrawRoiBtn.disabled = true;
 
         const tx = await contract.WITHDRAW();
-        
-        withdrawStatus.innerHTML = `<i class="fas fa-info-circle"></i> Waiting for confirmation... Hash: ${tx.hash.substring(0, 10)}...`;
-        
         await tx.wait();
         
-        withdrawStatus.className = 'alert alert-success';
-        withdrawStatus.innerHTML = '<i class="fas fa-check-circle"></i> Staking rewards withdrawn successfully!';
-
+        alert('ROI withdrawal successful!');
         await loadUserData();
 
-        setTimeout(() => {
-            withdrawBtn.innerHTML = originalText;
-            withdrawBtn.disabled = false;
-            withdrawStatus.style.display = 'none';
-        }, 3000);
+        withdrawRoiBtn.innerHTML = '<i class="fas fa-chart-line"></i> Withdraw ROI';
+        withdrawRoiBtn.disabled = false;
 
     } catch (error) {
-        console.error('Error withdrawing staking:', error);
-        handleTransactionError(error, 'withdrawStakingBtn', '<i class="fas fa-chart-line"></i> Withdraw Staking Rewards');
-        showAlert('Withdraw staking failed: ' + error.message, 'error');
+        console.error('Error withdrawing ROI:', error);
+        alert('Withdrawal failed: ' + error.message);
+        withdrawRoiBtn.innerHTML = '<i class="fas fa-chart-line"></i> Withdraw ROI';
+        withdrawRoiBtn.disabled = false;
     }
 }
 
-function handleTransactionError(error, buttonId, originalText) {
-    const button = document.getElementById(buttonId);
-    const withdrawStatus = document.getElementById('withdrawStatus');
-    
-    button.innerHTML = originalText;
-    button.disabled = false;
-    
-    withdrawStatus.style.display = 'block';
-    withdrawStatus.className = 'alert alert-error';
-    withdrawStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${error.message}`;
-}
+async function withdrawReferral() {
+    try {
+        if (!isConnected) {
+            alert('Please connect your wallet first');
+            return;
+        }
 
-function switchTab(tabName) {
-    const navLinks = document.querySelectorAll('.nav-links a');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    navLinks.forEach(link => link.classList.remove('active'));
-    tabContents.forEach(content => content.classList.remove('active'));
-    
-    document.querySelector(`[href="#${tabName}"]`).classList.add('active');
-    document.getElementById(tabName).classList.add('active');
-}
+        withdrawRefBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        withdrawRefBtn.disabled = true;
 
-function showAlert(message, type) {
-    const alertContainer = document.getElementById('alertContainer') || createAlertContainer();
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i> ${message}`;
-    alert.style.margin = '1rem';
-    alert.style.position = 'fixed';
-    alert.style.top = '100px';
-    alert.style.right = '20px';
-    alert.style.zIndex = '10000';
-    alert.style.minWidth = '300px';
-    
-    alertContainer.appendChild(alert);
-    
-    setTimeout(() => {
-        alert.remove();
-    }, 5000);
-}
+        const tx = await contract.CLAIM();
+        await tx.wait();
+        
+        alert('Referral withdrawal successful!');
+        await loadUserData();
 
-function createAlertContainer() {
-    const container = document.createElement('div');
-    container.id = 'alertContainer';
-    document.body.appendChild(container);
-    return container;
+        withdrawRefBtn.innerHTML = '<i class="fas fa-users"></i> Withdraw Referral';
+        withdrawRefBtn.disabled = false;
+
+    } catch (error) {
+        console.error('Error withdrawing referral:', error);
+        alert('Withdrawal failed: ' + error.message);
+        withdrawRefBtn.innerHTML = '<i class="fas fa-users"></i> Withdraw Referral';
+        withdrawRefBtn.disabled = false;
+    }
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
-    connectWalletBtn.addEventListener('click', connectWallet);
+    setupFAQ();
     
-    // Auto-connect if previously connected
+    // Event Listeners
+    connectWalletBtn.addEventListener('click', connectWallet);
+    heroBtn.addEventListener('click', () => {
+        if (isConnected) {
+            document.querySelector('a[href="#invest"]').click();
+        } else {
+            connectWallet();
+        }
+    });
+    investBtn.addEventListener('click', invest);
+    connectFromInvest.addEventListener('click', connectWallet);
+    withdrawRoiBtn.addEventListener('click', withdrawROI);
+    withdrawRefBtn.addEventListener('click', withdrawReferral);
+
+    // Auto-connect jika sebelumnya sudah connected
     if (typeof window.ethereum !== 'undefined') {
         window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
             if (accounts.length > 0) {
