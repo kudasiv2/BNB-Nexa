@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BNB Nexa - Advanced BNB Staking Platform. Earn 2.5% Daily ROI with our fully decentralized BNB staking platform. Secure, transparent, and profitable.">
+    <meta name="keywords" content="BNB, staking, crypto, investment, blockchain, decentralized finance">
     <title>BNB Nexa - Advanced BNB Staking Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -145,6 +147,136 @@
             z-index: -1;
             opacity: 0.7;
         }
+        
+        /* Professional improvements */
+        .section-padding {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+        
+        .container-narrow {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stat-card {
+            background: rgba(30, 27, 75, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.3);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7e22ce 0%, #3b82f6 100%);
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.5);
+        }
+        
+        .btn-secondary {
+            border: 1px solid #7e22ce;
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-subtitle {
+            color: #d1d5db;
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            text-align: center;
+        }
+        
+        .feature-card {
+            background: rgba(30, 27, 75, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #a855f7;
+            margin-bottom: 1rem;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: #0f172a;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="gradient-bg text-white min-h-screen overflow-x-hidden">
@@ -156,7 +288,7 @@
     
     <!-- Header & Navigation -->
     <header class="sticky top-0 z-50 bg-navy/90 backdrop-blur-md border-b border-purple/30">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="container-narrow px-4 py-3 flex justify-between items-center">
             <!-- Logo -->
             <div class="flex items-center space-x-3">
                 <div class="relative">
@@ -197,7 +329,7 @@
             <!-- Connect Wallet & Mobile Menu -->
             <div class="flex items-center space-x-4">
                 <!-- Connect Wallet Button -->
-                <button id="connect-wallet" class="bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-2 px-4 rounded-lg glow-effect transition flex items-center space-x-2">
+                <button id="connect-wallet" class="btn-primary flex items-center space-x-2">
                     <i class="fas fa-plug"></i>
                     <span>Connect Wallet</span>
                 </button>
@@ -248,7 +380,7 @@
             </nav>
             
             <div class="absolute bottom-6 left-6 right-6">
-                <button class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 rounded-lg glow-effect transition flex items-center justify-center space-x-2">
+                <button class="w-full btn-primary flex items-center justify-center space-x-2">
                     <i class="fas fa-plug"></i>
                     <span>Connect Wallet</span>
                 </button>
@@ -257,44 +389,44 @@
     </header>
 
     <!-- Home Section -->
-    <section id="home" class="py-24 px-4 relative overflow-hidden">
-        <div class="container mx-auto text-center max-w-5xl relative z-10">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text leading-tight">
+    <section id="home" class="section-padding px-4 relative overflow-hidden">
+        <div class="container-narrow text-center relative z-10">
+            <h1 class="section-title">
                 Next Generation<br>BNB Staking
             </h1>
-            <p class="text-xl md:text-2xl mb-10 text-gray-300 max-w-3xl mx-auto">
+            <p class="section-subtitle">
                 Earn <span class="text-light-purple font-bold">2.5% Daily ROI</span> with our fully decentralized BNB staking platform. Secure, transparent, and profitable.
             </p>
             <div class="flex flex-col md:flex-row justify-center gap-4 mb-16">
-                <a href="#invest" class="bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-4 px-10 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                <a href="#invest" class="btn-primary flex items-center justify-center space-x-2 py-4 px-10">
                     <i class="fas fa-rocket"></i>
                     <span>Start Earning Now</span>
                 </a>
-                <a href="#dashboard" class="border border-purple hover:bg-purple/20 text-white font-bold py-4 px-10 rounded-xl transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                <a href="#dashboard" class="btn-secondary flex items-center justify-center space-x-2 py-4 px-10">
                     <i class="fas fa-chart-bar"></i>
                     <span>View Dashboard</span>
                 </a>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
-                    <div class="text-3xl text-light-purple mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">Secure & Audited</h3>
                     <p class="text-gray-400">Fully verified smart contract with no owner privileges</p>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
-                    <div class="text-3xl text-light-purple mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-percentage"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">2.5% Daily ROI</h3>
                     <p class="text-gray-400">Consistent daily returns for 50 days</p>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
-                    <div class="text-3xl text-light-purple mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-layer-group"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2">5-Level Referral</h3>
@@ -305,12 +437,12 @@
     </section>
 
     <!-- Invest Section -->
-    <section id="invest" class="py-20 px-4 bg-navy/30">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Invest in BNB Nexa</h2>
-            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Start with just 0.01 BNB and watch your investment grow with our transparent staking platform</p>
+    <section id="invest" class="section-padding px-4 bg-navy/30">
+        <div class="container-narrow">
+            <h2 class="section-title text-center">Invest in BNB Nexa</h2>
+            <p class="section-subtitle">Start with just 0.01 BNB and watch your investment grow with our transparent staking platform</p>
             
-            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-8 glow-effect border border-purple/20">
+            <div class="stat-card p-8 glow-effect">
                 <div class="mb-8">
                     <h3 class="text-2xl font-semibold mb-2 flex items-center space-x-2">
                         <i class="fas fa-coins text-light-purple"></i>
@@ -346,7 +478,7 @@
                     <div class="text-sm text-gray-400 mt-2">Minimum: 0.01 BNB</div>
                 </div>
                 
-                <button id="invest-button" class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-4 px-4 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2 text-lg">
+                <button id="invest-button" class="w-full btn-primary flex items-center justify-center space-x-2 py-4 px-4 text-lg">
                     <i class="fas fa-lock"></i>
                     <span>Connect Wallet to Invest</span>
                 </button>
@@ -360,13 +492,13 @@
     </section>
 
     <!-- Dashboard Section -->
-    <section id="dashboard" class="py-20 px-4">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Your Dashboard</h2>
-            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Track your investments, earnings, and referral rewards in real-time</p>
+    <section id="dashboard" class="section-padding px-4">
+        <div class="container-narrow">
+            <h2 class="section-title text-center">Your Dashboard</h2>
+            <p class="section-subtitle">Track your investments, earnings, and referral rewards in real-time</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold flex items-center space-x-2">
                             <i class="fas fa-wallet text-light-purple"></i>
@@ -378,7 +510,7 @@
                     <div class="text-gray-400 text-sm">Total amount invested</div>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold flex items-center space-x-2">
                             <i class="fas fa-chart-line text-light-purple"></i>
@@ -390,7 +522,7 @@
                     <div class="text-gray-400 text-sm">Earnings from ROI</div>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold flex items-center space-x-2">
                             <i class="fas fa-money-bill-wave text-light-purple"></i>
@@ -402,7 +534,7 @@
                     <div class="text-gray-400 text-sm">Amount withdrawn</div>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold flex items-center space-x-2">
                             <i class="fas fa-users text-light-purple"></i>
@@ -414,7 +546,7 @@
                     <div class="text-gray-400 text-sm">Earnings from referrals</div>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold flex items-center space-x-2">
                             <i class="fas fa-percentage text-light-purple"></i>
@@ -426,7 +558,7 @@
                     <div class="text-gray-400 text-sm">Available for withdrawal</div>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold flex items-center space-x-2">
                             <i class="fas fa-list text-light-purple"></i>
@@ -442,19 +574,19 @@
     </section>
 
     <!-- Referral Section -->
-    <section id="referral" class="py-20 px-4 bg-navy/30">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Referral Program</h2>
-            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Invite friends and earn from 5 levels of referrals with our generous commission structure</p>
+    <section id="referral" class="section-padding px-4 bg-navy/30">
+        <div class="container-narrow">
+            <h2 class="section-title text-center">Referral Program</h2>
+            <p class="section-subtitle">Invite friends and earn from 5 levels of referrals with our generous commission structure</p>
             
-            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-8 glow-effect border border-purple/20 mb-8">
+            <div class="stat-card p-8 glow-effect mb-8">
                 <h3 class="text-2xl font-semibold mb-4 flex items-center space-x-2">
                     <i class="fas fa-link text-light-purple"></i>
                     <span>Your Referral Link</span>
                 </h3>
                 <div class="flex flex-col md:flex-row gap-3 mb-6">
                     <input type="text" readonly class="flex-grow bg-navy border border-purple/50 rounded-xl py-3 px-4 text-white" value="https://bnbnexa.com/?ref=your_address" id="referral-link">
-                    <button class="bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center space-x-2" id="copy-referral">
+                    <button class="btn-primary flex items-center justify-center space-x-2 py-3 px-6" id="copy-referral">
                         <i class="fas fa-copy"></i>
                         <span>Copy</span>
                     </button>
@@ -491,7 +623,7 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
                         <i class="fas fa-user-plus text-light-purple"></i>
                         <span>Total Referrals</span>
@@ -500,7 +632,7 @@
                     <div class="text-gray-400">People joined using your link</div>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
                         <i class="fas fa-coins text-light-purple"></i>
                         <span>Referral Earnings</span>
@@ -513,13 +645,13 @@
     </section>
 
     <!-- Withdraw Section -->
-    <section id="withdraw" class="py-20 px-4">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Withdraw Earnings</h2>
-            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Withdraw your ROI earnings and referral bonuses anytime with no minimum withdrawal</p>
+    <section id="withdraw" class="section-padding px-4">
+        <div class="container-narrow">
+            <h2 class="section-title text-center">Withdraw Earnings</h2>
+            <p class="section-subtitle">Withdraw your ROI earnings and referral bonuses anytime with no minimum withdrawal</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
                         <i class="fas fa-percentage text-light-purple"></i>
                         <span>ROI Earnings</span>
@@ -528,13 +660,13 @@
                         <div class="text-3xl font-bold text-light-purple mb-1" id="roi-available">0.00 BNB</div>
                         <div class="text-gray-400">Available for withdrawal</div>
                     </div>
-                    <button id="withdraw-roi" class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 px-4 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                    <button id="withdraw-roi" class="w-full btn-primary flex items-center justify-center space-x-2 py-3 px-4">
                         <i class="fas fa-download"></i>
                         <span>Withdraw ROI</span>
                     </button>
                 </div>
                 
-                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <div class="stat-card">
                     <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
                         <i class="fas fa-users text-light-purple"></i>
                         <span>Referral Bonus</span>
@@ -543,14 +675,14 @@
                         <div class="text-3xl font-bold text-light-purple mb-1" id="referral-available">0.00 BNB</div>
                         <div class="text-gray-400">Available for withdrawal</div>
                     </div>
-                    <button id="withdraw-referral" class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 px-4 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                    <button id="withdraw-referral" class="w-full btn-primary flex items-center justify-center space-x-2 py-3 px-4">
                         <i class="fas fa-download"></i>
                         <span>Withdraw Referral</span>
                     </button>
                 </div>
             </div>
             
-            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+            <div class="stat-card">
                 <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
                     <i class="fas fa-history text-light-purple"></i>
                     <span>Withdrawal History</span>
@@ -564,12 +696,12 @@
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="py-20 px-4 bg-navy/30">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Frequently Asked Questions</h2>
-            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Find answers to the most common questions about BNB Nexa</p>
+    <section id="faq" class="section-padding px-4 bg-navy/30">
+        <div class="container-narrow">
+            <h2 class="section-title text-center">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Find answers to the most common questions about BNB Nexa</p>
             
-            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-8 glow-effect border border-purple/20">
+            <div class="stat-card p-8 glow-effect">
                 <div class="faq-item">
                     <div class="faq-question">
                         <span class="font-semibold">What is the minimum investment?</span>
@@ -635,7 +767,7 @@
 
     <!-- Footer -->
     <footer class="bg-navy border-t border-purple/30 py-16 px-4">
-        <div class="container mx-auto max-w-6xl">
+        <div class="container-narrow">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="md:col-span-2">
                     <div class="flex items-center space-x-3 mb-6">
@@ -695,8 +827,8 @@
     </footer>
 
     <!-- Wallet Connection Modal -->
-    <div id="wallet-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
-        <div class="bg-navy rounded-2xl p-8 max-w-md w-full mx-4 border border-purple/30 glow-effect">
+    <div id="wallet-modal" class="modal">
+        <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-bold gradient-text">Connect Wallet</h3>
                 <button id="close-wallet-modal" class="text-2xl text-gray-400 hover:text-white">
@@ -871,11 +1003,11 @@
 
         // Wallet connection functions
         function openWalletModal() {
-            walletModal.classList.remove('hidden');
+            walletModal.classList.add('active');
         }
 
         function closeWalletModalFunc() {
-            walletModal.classList.add('hidden');
+            walletModal.classList.remove('active');
         }
 
         async function connectMetaMask() {
