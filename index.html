@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNB Nexa - Advanced BNB Staking Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'navy': '#0f172a',
+                        'purple': '#7e22ce',
+                        'light-purple': '#a855f7',
+                        'dark-blue': '#1e1b4b',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #312e81 100%);
+            background-attachment: fixed;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.3);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+            to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.7); }
+        }
+        
+        .pulse-ring {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 1; }
+            70% { transform: scale(1.2); opacity: 0; }
+            100% { transform: scale(0.8); opacity: 0; }
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .faq-question {
+            cursor: pointer;
+            padding: 1.2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            color: #a855f7;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .faq-answer.active {
+            max-height: 500px;
+            padding-bottom: 1.5rem;
+        }
+        
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        .backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+        
+        .backdrop.active {
+            display: block;
+        }
+        
+        /* 3D Animation Container */
+        #animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white min-h-screen overflow-x-hidden">
+    <!-- 3D Animation Background -->
+    <div id="animation-container"></div>
+    
+    <!-- Backdrop for mobile menu -->
+    <div id="backdrop" class="backdrop"></div>
+    
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-navy/90 backdrop-blur-md border-b border-purple/30">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <img src="https://ik.imagekit.io/5k3qmdgtg/BNB%20Nexa.png?updatedAt=1759165705910" alt="BNB Nexa" class="h-10 w-10 floating">
+                    <div class="absolute -inset-1 rounded-full pulse-ring border border-light-purple"></div>
+                </div>
+                <span class="text-2xl font-bold gradient-text">BNB Nexa</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-light-purple transition flex items-center space-x-1">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#invest" class="hover:text-light-purple transition flex items-center space-x-1">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Invest</span>
+                </a>
+                <a href="#dashboard" class="hover:text-light-purple transition flex items-center space-x-1">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#referral" class="hover:text-light-purple transition flex items-center space-x-1">
+                    <i class="fas fa-users"></i>
+                    <span>Referral</span>
+                </a>
+                <a href="#withdraw" class="hover:text-light-purple transition flex items-center space-x-1">
+                    <i class="fas fa-wallet"></i>
+                    <span>Withdraw</span>
+                </a>
+                <a href="#faq" class="hover:text-light-purple transition flex items-center space-x-1">
+                    <i class="fas fa-question-circle"></i>
+                    <span>FAQ</span>
+                </a>
+            </nav>
+            
+            <!-- Connect Wallet & Mobile Menu -->
+            <div class="flex items-center space-x-4">
+                <!-- Connect Wallet Button -->
+                <button id="connect-wallet" class="bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-2 px-4 rounded-lg glow-effect transition flex items-center space-x-2">
+                    <i class="fas fa-plug"></i>
+                    <span>Connect Wallet</span>
+                </button>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-80 bg-navy border-l border-purple/30 p-6 md:hidden z-50">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center space-x-2">
+                    <img src="https://ik.imagekit.io/5k3qmdgtg/BNB%20Nexa.png?updatedAt=1759165705910" alt="BNB Nexa" class="h-8 w-8">
+                    <span class="text-lg font-bold gradient-text">BNB Nexa</span>
+                </div>
+                <button id="close-menu" class="text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col space-y-6">
+                <a href="#home" class="hover:text-light-purple transition flex items-center space-x-3 py-2">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#invest" class="hover:text-light-purple transition flex items-center space-x-3 py-2">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span>Invest</span>
+                </a>
+                <a href="#dashboard" class="hover:text-light-purple transition flex items-center space-x-3 py-2">
+                    <i class="fas fa-tachometer-alt w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#referral" class="hover:text-light-purple transition flex items-center space-x-3 py-2">
+                    <i class="fas fa-users w-5"></i>
+                    <span>Referral</span>
+                </a>
+                <a href="#withdraw" class="hover:text-light-purple transition flex items-center space-x-3 py-2">
+                    <i class="fas fa-wallet w-5"></i>
+                    <span>Withdraw</span>
+                </a>
+                <a href="#faq" class="hover:text-light-purple transition flex items-center space-x-3 py-2">
+                    <i class="fas fa-question-circle w-5"></i>
+                    <span>FAQ</span>
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-6 left-6 right-6">
+                <button class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 rounded-lg glow-effect transition flex items-center justify-center space-x-2">
+                    <i class="fas fa-plug"></i>
+                    <span>Connect Wallet</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="py-24 px-4 relative overflow-hidden">
+        <div class="container mx-auto text-center max-w-5xl relative z-10">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text leading-tight">
+                Next Generation<br>BNB Staking
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 text-gray-300 max-w-3xl mx-auto">
+                Earn <span class="text-light-purple font-bold">2.5% Daily ROI</span> with our fully decentralized BNB staking platform. Secure, transparent, and profitable.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4 mb-16">
+                <a href="#invest" class="bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-4 px-10 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                    <i class="fas fa-rocket"></i>
+                    <span>Start Earning Now</span>
+                </a>
+                <a href="#dashboard" class="border border-purple hover:bg-purple/20 text-white font-bold py-4 px-10 rounded-xl transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>View Dashboard</span>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="text-3xl text-light-purple mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Secure & Audited</h3>
+                    <p class="text-gray-400">Fully verified smart contract with no owner privileges</p>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="text-3xl text-light-purple mb-4">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">2.5% Daily ROI</h3>
+                    <p class="text-gray-400">Consistent daily returns for 50 days</p>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="text-3xl text-light-purple mb-4">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">5-Level Referral</h3>
+                    <p class="text-gray-400">Earn from 5 levels of referrals</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Invest Section -->
+    <section id="invest" class="py-20 px-4 bg-navy/30">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Invest in BNB Nexa</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Start with just 0.01 BNB and watch your investment grow with our transparent staking platform</p>
+            
+            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-8 glow-effect border border-purple/20">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-semibold mb-2 flex items-center space-x-2">
+                        <i class="fas fa-coins text-light-purple"></i>
+                        <span>Minimum Deposit: 0.01 BNB</span>
+                    </h3>
+                    <p class="text-gray-300">Start with as little as 0.01 BNB and watch your investment grow exponentially</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-5 rounded-xl text-center card-hover">
+                        <div class="text-3xl font-bold text-light-purple mb-2">2.5%</div>
+                        <div class="text-sm text-gray-300">Daily ROI</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-5 rounded-xl text-center card-hover">
+                        <div class="text-3xl font-bold text-light-purple mb-2">50</div>
+                        <div class="text-sm text-gray-300">Days Plan</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-5 rounded-xl text-center card-hover">
+                        <div class="text-3xl font-bold text-light-purple mb-2">125%</div>
+                        <div class="text-sm text-gray-300">Total Return</div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-3 flex items-center space-x-2">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Enter BNB Amount</span>
+                    </label>
+                    <div class="relative">
+                        <input type="number" step="0.01" min="0.01" class="w-full bg-navy border border-purple/50 rounded-xl py-4 px-4 text-white focus:outline-none focus:ring-2 focus:ring-purple text-lg" placeholder="0.01" id="invest-amount">
+                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">BNB</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-2">Minimum: 0.01 BNB</div>
+                </div>
+                
+                <button id="invest-button" class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-4 px-4 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2 text-lg">
+                    <i class="fas fa-lock"></i>
+                    <span>Connect Wallet to Invest</span>
+                </button>
+                
+                <div class="mt-4 text-center text-sm text-gray-400">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    <span>10% fee applied to deposits for platform maintenance</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="py-20 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Your Dashboard</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Track your investments, earnings, and referral rewards in real-time</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold flex items-center space-x-2">
+                            <i class="fas fa-wallet text-light-purple"></i>
+                            <span>Total Deposit</span>
+                        </h3>
+                        <div class="text-xs bg-purple/30 text-light-purple px-2 py-1 rounded-full">BNB</div>
+                    </div>
+                    <div class="text-3xl font-bold mb-1" id="total-deposit">0.00</div>
+                    <div class="text-gray-400 text-sm">Total amount invested</div>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold flex items-center space-x-2">
+                            <i class="fas fa-chart-line text-light-purple"></i>
+                            <span>Total Profit</span>
+                        </h3>
+                        <div class="text-xs bg-purple/30 text-light-purple px-2 py-1 rounded-full">BNB</div>
+                    </div>
+                    <div class="text-3xl font-bold mb-1" id="total-profit">0.00</div>
+                    <div class="text-gray-400 text-sm">Earnings from ROI</div>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold flex items-center space-x-2">
+                            <i class="fas fa-money-bill-wave text-light-purple"></i>
+                            <span>Total Withdrawn</span>
+                        </h3>
+                        <div class="text-xs bg-purple/30 text-light-purple px-2 py-1 rounded-full">BNB</div>
+                    </div>
+                    <div class="text-3xl font-bold mb-1" id="total-withdrawn">0.00</div>
+                    <div class="text-gray-400 text-sm">Amount withdrawn</div>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold flex items-center space-x-2">
+                            <i class="fas fa-users text-light-purple"></i>
+                            <span>Referral Bonus</span>
+                        </h3>
+                        <div class="text-xs bg-purple/30 text-light-purple px-2 py-1 rounded-full">BNB</div>
+                    </div>
+                    <div class="text-3xl font-bold mb-1" id="referral-bonus">0.00</div>
+                    <div class="text-gray-400 text-sm">Earnings from referrals</div>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold flex items-center space-x-2">
+                            <i class="fas fa-percentage text-light-purple"></i>
+                            <span>Current ROI</span>
+                        </h3>
+                        <div class="text-xs bg-purple/30 text-light-purple px-2 py-1 rounded-full">BNB</div>
+                    </div>
+                    <div class="text-3xl font-bold mb-1" id="current-roi">0.00</div>
+                    <div class="text-gray-400 text-sm">Available for withdrawal</div>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold flex items-center space-x-2">
+                            <i class="fas fa-list text-light-purple"></i>
+                            <span>Active Deposits</span>
+                        </h3>
+                        <div class="text-xs bg-purple/30 text-light-purple px-2 py-1 rounded-full">Count</div>
+                    </div>
+                    <div class="text-3xl font-bold mb-1" id="active-deposits">0</div>
+                    <div class="text-gray-400 text-sm">Number of active investments</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Referral Section -->
+    <section id="referral" class="py-20 px-4 bg-navy/30">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Referral Program</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Invite friends and earn from 5 levels of referrals with our generous commission structure</p>
+            
+            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-8 glow-effect border border-purple/20 mb-8">
+                <h3 class="text-2xl font-semibold mb-4 flex items-center space-x-2">
+                    <i class="fas fa-link text-light-purple"></i>
+                    <span>Your Referral Link</span>
+                </h3>
+                <div class="flex flex-col md:flex-row gap-3 mb-6">
+                    <input type="text" readonly class="flex-grow bg-navy border border-purple/50 rounded-xl py-3 px-4 text-white" value="https://bnbnexa.com/?ref=your_address" id="referral-link">
+                    <button class="bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center space-x-2" id="copy-referral">
+                        <i class="fas fa-copy"></i>
+                        <span>Copy</span>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-sitemap text-light-purple"></i>
+                        <span>Referral Levels</span>
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-4 rounded-xl text-center card-hover">
+                            <div class="text-lg font-bold">Level 1</div>
+                            <div class="text-light-purple font-semibold text-xl">10%</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-4 rounded-xl text-center card-hover">
+                            <div class="text-lg font-bold">Level 2</div>
+                            <div class="text-light-purple font-semibold text-xl">5%</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-4 rounded-xl text-center card-hover">
+                            <div class="text-lg font-bold">Level 3</div>
+                            <div class="text-light-purple font-semibold text-xl">3%</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-4 rounded-xl text-center card-hover">
+                            <div class="text-lg font-bold">Level 4</div>
+                            <div class="text-light-purple font-semibold text-xl">1%</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple/30 to-blue-500/30 p-4 rounded-xl text-center card-hover">
+                            <div class="text-lg font-bold">Level 5</div>
+                            <div class="text-light-purple font-semibold text-xl">1%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-user-plus text-light-purple"></i>
+                        <span>Total Referrals</span>
+                    </h3>
+                    <div class="text-4xl font-bold text-light-purple mb-2" id="total-referrals">0</div>
+                    <div class="text-gray-400">People joined using your link</div>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-coins text-light-purple"></i>
+                        <span>Referral Earnings</span>
+                    </h3>
+                    <div class="text-4xl font-bold text-light-purple mb-2" id="referral-earnings">0.00</div>
+                    <div class="text-gray-400">Total commission earned</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Withdraw Section -->
+    <section id="withdraw" class="py-20 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Withdraw Earnings</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Withdraw your ROI earnings and referral bonuses anytime with no minimum withdrawal</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-percentage text-light-purple"></i>
+                        <span>ROI Earnings</span>
+                    </h3>
+                    <div class="mb-4">
+                        <div class="text-3xl font-bold text-light-purple mb-1" id="roi-available">0.00 BNB</div>
+                        <div class="text-gray-400">Available for withdrawal</div>
+                    </div>
+                    <button id="withdraw-roi" class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 px-4 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                        <i class="fas fa-download"></i>
+                        <span>Withdraw ROI</span>
+                    </button>
+                </div>
+                
+                <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-users text-light-purple"></i>
+                        <span>Referral Bonus</span>
+                    </h3>
+                    <div class="mb-4">
+                        <div class="text-3xl font-bold text-light-purple mb-1" id="referral-available">0.00 BNB</div>
+                        <div class="text-gray-400">Available for withdrawal</div>
+                    </div>
+                    <button id="withdraw-referral" class="w-full bg-gradient-to-r from-purple to-blue-500 hover:from-light-purple hover:to-blue-400 text-white font-bold py-3 px-4 rounded-xl glow-effect transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                        <i class="fas fa-download"></i>
+                        <span>Withdraw Referral</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-6 card-hover border border-purple/20">
+                <h3 class="text-xl font-semibold mb-4 flex items-center space-x-2">
+                    <i class="fas fa-history text-light-purple"></i>
+                    <span>Withdrawal History</span>
+                </h3>
+                <div class="text-center py-8 text-gray-400">
+                    <i class="fas fa-receipt text-4xl mb-3 opacity-50"></i>
+                    <p>No withdrawal history yet</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 px-4 bg-navy/30">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Frequently Asked Questions</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Find answers to the most common questions about BNB Nexa</p>
+            
+            <div class="bg-navy/60 backdrop-blur-sm rounded-2xl p-8 glow-effect border border-purple/20">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="font-semibold">What is the minimum investment?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-gray-300">The minimum investment is 0.01 BNB. You can start with this small amount and reinvest your profits to grow your portfolio exponentially over time.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="font-semibold">How much can I earn daily?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-gray-300">You can earn 2.5% daily on your investment for 50 days, which totals 125% return on your initial deposit. This means if you invest 1 BNB, you'll receive 1.25 BNB in total over 50 days.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="font-semibold">How does the referral system work?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-gray-300">Our referral program has 5 levels: 10% for level 1 (direct referrals), 5% for level 2, 3% for level 3, and 1% for levels 4 and 5. You earn commissions from your direct referrals and their referrals up to 5 levels deep, creating a powerful passive income stream.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="font-semibold">Is there a withdrawal fee?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-gray-300">There are no withdrawal fees for ROI earnings. A 10% fee is applied only to the initial deposit which goes to the development and maintenance of the platform, ensuring its long-term sustainability.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="font-semibold">Is the contract audited and secure?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-gray-300">Yes, our smart contract is verified on BscScan and fully transparent. The contract has no owner privileges, making it truly decentralized and secure. You can view the source code and verify its security yourself on BscScan.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="font-semibold">How often can I withdraw my earnings?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-gray-300">You can withdraw your ROI earnings and referral bonuses at any time, with no restrictions or minimum withdrawal amounts. The platform is designed to give you full control over your funds.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-navy border-t border-purple/30 py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="https://ik.imagekit.io/5k3qmdgtg/BNB%20Nexa.png?updatedAt=1759165705910" alt="BNB Nexa" class="h-12 w-12">
+                        <span class="text-2xl font-bold gradient-text">BNB Nexa</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 max-w-md">
+                        BNB Nexa is a decentralized BNB staking platform offering 2.5% daily ROI with a 50-day investment plan and a 5-level referral program. Fully transparent and secure.
+                    </p>
+                    <div class="flex items-center space-x-3 text-sm text-gray-400 bg-navy/60 rounded-lg p-3 inline-flex">
+                        <i class="fas fa-file-contract text-light-purple"></i>
+                        <a href="https://bscscan.com/address/0xc1465fdf616f63ba0dfa565ce918f13feed2b468#code" class="hover:text-light-purple transition" target="_blank">
+                            Contract: 0xC14...2b468
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6 flex items-center space-x-2">
+                        <i class="fas fa-link text-light-purple"></i>
+                        <span>Quick Links</span>
+                    </h3>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-light-purple transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs"></i><span>Home</span></a></li>
+                        <li><a href="#invest" class="text-gray-400 hover:text-light-purple transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs"></i><span>Invest</span></a></li>
+                        <li><a href="#dashboard" class="text-gray-400 hover:text-light-purple transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs"></i><span>Dashboard</span></a></li>
+                        <li><a href="#faq" class="text-gray-400 hover:text-light-purple transition flex items-center space-x-2"><i class="fas fa-chevron-right text-xs"></i><span>FAQ</span></a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6 flex items-center space-x-2">
+                        <i class="fas fa-share-alt text-light-purple"></i>
+                        <span>Connect With Us</span>
+                    </h3>
+                    <div class="flex space-x-4">
+                        <a href="https://t.me/BNBNexa" target="_blank" class="text-gray-400 hover:text-light-purple transition text-xl bg-navy/60 p-3 rounded-lg">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="https://chat.whatsapp.com/" target="_blank" class="text-gray-400 hover:text-light-purple transition text-xl bg-navy/60 p-3 rounded-lg">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://twitter.com/" target="_blank" class="text-gray-400 hover:text-light-purple transition text-xl bg-navy/60 p-3 rounded-lg">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://youtube.com/" target="_blank" class="text-gray-400 hover:text-light-purple transition text-xl bg-navy/60 p-3 rounded-lg">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-purple/30 mt-12 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2025 BNB Nexa. All rights reserved. | Fully Decentralized BNB Staking Platform</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Wallet Connection Modal -->
+    <div id="wallet-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+        <div class="bg-navy rounded-2xl p-8 max-w-md w-full mx-4 border border-purple/30 glow-effect">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold gradient-text">Connect Wallet</h3>
+                <button id="close-wallet-modal" class="text-2xl text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <p class="text-gray-400 mb-6">Choose your preferred wallet to connect to BNB Nexa</p>
+            
+            <div class="space-y-4">
+                <button class="w-full bg-navy/60 hover:bg-purple/20 border border-purple/30 rounded-xl p-4 text-left transition flex items-center space-x-4" id="connect-metamask">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask" class="h-8 w-8">
+                    <div>
+                        <div class="font-semibold">MetaMask</div>
+                        <div class="text-sm text-gray-400">Connect to your MetaMask Wallet</div>
+                    </div>
+                </button>
+                
+                <button class="w-full bg-navy/60 hover:bg-purple/20 border border-purple/30 rounded-xl p-4 text-left transition flex items-center space-x-4" id="connect-walletconnect">
+                    <img src="https://repository-images.githubusercontent.com/180328715/fca6c000-7c91-11ea-9b9b-5f2cd28b4459" alt="WalletConnect" class="h-8 w-8 rounded">
+                    <div>
+                        <div class="font-semibold">WalletConnect</div>
+                        <div class="text-sm text-gray-400">Scan with WalletConnect</div>
+                    </div>
+                </button>
+                
+                <button class="w-full bg-navy/60 hover:bg-purple/20 border border-purple/30 rounded-xl p-4 text-left transition flex items-center space-x-4" id="connect-binance">
+                    <img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" alt="Binance Chain Wallet" class="h-8 w-8 rounded">
+                    <div>
+                        <div class="font-semibold">Binance Chain</div>
+                        <div class="text-sm text-gray-400">Binance Chain Wallet</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Contract Configuration
+        const CONTRACT_ADDRESS = "0xc1465fdf616f63ba0dfa565ce918f13feed2b468";
+        const CONTRACT_ABI = [
+            "function DEPOSIT(string memory _referralCode) external payable",
+            "function CLAIM() public",
+            "function WITHDRAW() external",
+            "function getPendingReward(address userAddr) public view returns (uint256)",
+            "function getTotalInvest(address userAddr) external view returns (uint256)",
+            "function isRegistered(address userAddr) external view returns (bool)",
+            "function getReferralCode(address userAddr) external view returns (string memory)",
+            "function getDownlineCount(address userAddr, uint8 level) external view returns (uint256)",
+            "function getLevelIncome(address userAddr, uint8 level) external view returns (uint256)"
+        ];
+
+        // Global variables
+        let provider;
+        let signer;
+        let contract;
+        let userAddress;
+
+        // DOM Elements
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const backdrop = document.getElementById('backdrop');
+        const connectWalletBtn = document.getElementById('connect-wallet');
+        const walletModal = document.getElementById('wallet-modal');
+        const closeWalletModal = document.getElementById('close-wallet-modal');
+        const connectMetamask = document.getElementById('connect-metamask');
+        const investButton = document.getElementById('invest-button');
+        const copyReferralBtn = document.getElementById('copy-referral');
+        const referralLink = document.getElementById('referral-link');
+
+        // Initialize 3D Animation
+        function init3DAnimation() {
+            const container = document.getElementById('animation-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create floating geometric shapes
+            const geometry = new THREE.IcosahedronGeometry(1, 0);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x7e22ce, 
+                wireframe: true,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const shapes = [];
+            const numShapes = 15;
+            
+            for (let i = 0; i < numShapes; i++) {
+                const shape = new THREE.Mesh(geometry, material);
+                shape.position.x = Math.random() * 40 - 20;
+                shape.position.y = Math.random() * 40 - 20;
+                shape.position.z = Math.random() * 40 - 20;
+                shape.rotation.x = Math.random() * Math.PI;
+                shape.rotation.y = Math.random() * Math.PI;
+                shapes.push(shape);
+                scene.add(shape);
+            }
+            
+            camera.position.z = 30;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                shapes.forEach(shape => {
+                    shape.rotation.x += 0.005;
+                    shape.rotation.y += 0.005;
+                    shape.position.y += Math.sin(Date.now() * 0.001 + shape.position.x) * 0.01;
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            init3DAnimation();
+            initEventListeners();
+            checkIfWalletConnected();
+        });
+
+        // Initialize event listeners
+        function initEventListeners() {
+            // Mobile menu
+            mobileMenuButton.addEventListener('click', openMobileMenu);
+            closeMenuButton.addEventListener('click', closeMobileMenu);
+            backdrop.addEventListener('click', closeMobileMenu);
+            
+            // Wallet connection
+            connectWalletBtn.addEventListener('click', openWalletModal);
+            closeWalletModal.addEventListener('click', closeWalletModalFunc);
+            connectMetamask.addEventListener('click', connectMetaMask);
+            
+            // Other interactions
+            copyReferralBtn.addEventListener('click', copyReferralLink);
+            investButton.addEventListener('click', handleInvest);
+            
+            // FAQ accordion
+            initFAQAccordion();
+            
+            // Smooth scrolling
+            initSmoothScrolling();
+        }
+
+        // Mobile menu functions
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            backdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            backdrop.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Wallet connection functions
+        function openWalletModal() {
+            walletModal.classList.remove('hidden');
+        }
+
+        function closeWalletModalFunc() {
+            walletModal.classList.add('hidden');
+        }
+
+        async function connectMetaMask() {
+            try {
+                if (typeof window.ethereum !== 'undefined') {
+                    // Request account access
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    userAddress = accounts[0];
+                    
+                    // Initialize ethers
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+                    
+                    // Update UI
+                    connectWalletBtn.innerHTML = `<i class="fas fa-wallet"></i><span>${userAddress.slice(0, 6)}...${userAddress.slice(-4)}</span>`;
+                    closeWalletModalFunc();
+                    
+                    // Load user data
+                    loadUserData();
+                    
+                    console.log('Connected to MetaMask:', userAddress);
+                } else {
+                    alert('Please install MetaMask to use this dApp!');
+                }
+            } catch (error) {
+                console.error('Error connecting to MetaMask:', error);
+                alert('Error connecting to wallet. Please try again.');
+            }
+        }
+
+        // Check if wallet is already connected
+        async function checkIfWalletConnected() {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    userAddress = accounts[0];
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+                    
+                    // Update UI
+                    connectWalletBtn.innerHTML = `<i class="fas fa-wallet"></i><span>${userAddress.slice(0, 6)}...${userAddress.slice(-4)}</span>`;
+                    
+                    // Load user data
+                    loadUserData();
+                }
+            }
+        }
+
+        // Load user data from contract
+        async function loadUserData() {
+            if (!contract || !userAddress) return;
+            
+            try {
+                // Check if user is registered
+                const isRegistered = await contract.isRegistered(userAddress);
+                
+                if (isRegistered) {
+                    // Get user data
+                    const totalInvest = await contract.getTotalInvest(userAddress);
+                    const pendingReward = await contract.getPendingReward(userAddress);
+                    const referralCode = await contract.getReferralCode(userAddress);
+                    
+                    // Update UI with real data
+                    document.getElementById('total-deposit').textContent = ethers.utils.formatEther(totalInvest);
+                    document.getElementById('current-roi').textContent = ethers.utils.formatEther(pendingReward);
+                    referralLink.value = `https://bnbnexa.com/?ref=${referralCode}`;
+                    
+                    // You would continue to load other data points here
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // Handle investment
+        async function handleInvest() {
+            if (!contract || !userAddress) {
+                openWalletModal();
+                return;
+            }
+            
+            const amount = document.getElementById('invest-amount').value;
+            if (!amount || parseFloat(amount) < 0.01) {
+                alert('Please enter a valid amount (minimum 0.01 BNB)');
+                return;
+            }
+            
+            try {
+                // For demo purposes, we'll use a placeholder referral code
+                // In a real implementation, you might get this from URL params or user input
+                const referralCode = "1234567"; // This should be dynamic
+                
+                const tx = await contract.DEPOSIT(referralCode, {
+                    value: ethers.utils.parseEther(amount)
+                });
+                
+                investButton.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>`;
+                investButton.disabled = true;
+                
+                // Wait for transaction confirmation
+                await tx.wait();
+                
+                // Update UI
+                investButton.innerHTML = `<i class="fas fa-check"></i><span>Investment Successful!</span>`;
+                setTimeout(() => {
+                    investButton.innerHTML = `<i class="fas fa-lock"></i><span>Invest Now</span>`;
+                    investButton.disabled = false;
+                }, 3000);
+                
+                // Reload user data
+                loadUserData();
+                
+            } catch (error) {
+                console.error('Error making investment:', error);
+                investButton.innerHTML = `<i class="fas fa-lock"></i><span>Invest Now</span>`;
+                investButton.disabled = false;
+                alert('Error processing investment. Please try again.');
+            }
+        }
+
+        // Copy referral link
+        function copyReferralLink() {
+            referralLink.select();
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const originalText = copyReferralBtn.innerHTML;
+            copyReferralBtn.innerHTML = `<i class="fas fa-check"></i><span>Copied!</span>`;
+            setTimeout(() => {
+                copyReferralBtn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // FAQ Accordion
+        function initFAQAccordion() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const icon = question.querySelector('i');
+                    
+                    // Toggle active class on answer
+                    answer.classList.toggle('active');
+                    
+                    // Rotate icon
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                    
+                    // Close other answers
+                    faqQuestions.forEach(otherQuestion => {
+                        if (otherQuestion !== question) {
+                            const otherAnswer = otherQuestion.nextElementSibling;
+                            const otherIcon = otherQuestion.querySelector('i');
+                            
+                            otherAnswer.classList.remove('active');
+                            otherIcon.classList.remove('fa-chevron-up');
+                            otherIcon.classList.add('fa-chevron-down');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Smooth scrolling
+        function initSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        closeMobileMenu();
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
