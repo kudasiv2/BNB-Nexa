@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BNBNexa - Professional BNB Staking Platform</title>
+    <title>BNBNexa - Stable Yield Farming on BSC</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="application/javascript"></script>
     <style>
@@ -15,6 +15,8 @@
             --light: #f8fafc;
             --gradient: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             --gradient-glow: linear-gradient(135deg, #1e40af 0%, #60a5fa 50%, #3b82f6 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         * {
@@ -69,6 +71,21 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--light);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
         .nav-links {
             display: flex;
             gap: 2rem;
@@ -80,20 +97,16 @@
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
         }
 
         .nav-links a:hover {
-            color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .nav-links a.active {
-            color: var(--accent);
             background: var(--gradient);
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
         }
 
         .wallet-section {
@@ -105,7 +118,6 @@
         /* Main Content */
         .main-content {
             margin-top: 80px;
-            min-height: calc(100vh - 200px);
         }
 
         .container {
@@ -116,41 +128,44 @@
 
         /* Hero Section */
         .hero {
-            background: var(--gradient);
-            border-radius: 20px;
-            padding: 4rem 2rem;
             text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(96, 165, 250, 0.1) 0%, transparent 70%);
-            animation: glow 6s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            0% { transform: translate(-10%, -10%) scale(1); }
-            100% { transform: translate(10%, 10%) scale(1.1); }
+            padding: 6rem 2rem;
+            background: radial-gradient(circle at center, rgba(30, 58, 138, 0.2) 0%, transparent 70%);
         }
 
         .hero h1 {
             font-size: 3.5rem;
-            margin-bottom: 1rem;
-            position: relative;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-glow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
             opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Sections */
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-glow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         /* Cards */
@@ -159,7 +174,6 @@
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 2rem;
-            margin-bottom: 2rem;
             border: 1px solid rgba(59, 130, 246, 0.2);
             transition: all 0.3s ease;
         }
@@ -168,20 +182,6 @@
             transform: translateY(-5px);
             border-color: var(--accent);
             box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-header i {
-            font-size: 1.5rem;
-            background: var(--gradient);
-            padding: 0.8rem;
-            border-radius: 12px;
         }
 
         /* Stats Grid */
@@ -210,84 +210,20 @@
             bottom: 0;
             background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
             transform: translateX(-100%);
-            transition: transform 0.6s;
         }
 
         .stat-card:hover::before {
-            transform: translateX(100%);
+            animation: shimmer 1.5s;
+        }
+
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
         }
 
         .stat-value {
             font-size: 2.5rem;
             font-weight: bold;
             margin: 1rem 0;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .tab.active {
-            background: var(--gradient);
-            border-color: var(--accent);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 10px;
-            color: var(--light);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         /* Buttons */
@@ -304,6 +240,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            text-decoration: none;
         }
 
         .btn:hover {
@@ -311,40 +248,73 @@
             box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
         }
 
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
         }
 
         .btn-warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
         }
 
         /* Level Income Grid */
         .level-income {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 1.5rem;
         }
 
         .level-card {
             background: rgba(15, 23, 42, 0.8);
-            padding: 1.5rem;
-            border-radius: 12px;
+            padding: 2rem;
+            border-radius: 15px;
             text-align: center;
             border: 1px solid rgba(59, 130, 246, 0.2);
-            transition: all 0.3s ease;
         }
 
-        .level-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
+        .level-percent {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 1rem 0;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* Security Grid */
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .security-card {
+            background: var(--gradient);
+            padding: 2rem;
+            border-radius: 15px;
         }
 
         /* Footer */
@@ -359,72 +329,74 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            text-align: center;
         }
 
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            background: var(--gradient-glow);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .footer-logo {
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        .footer-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
         }
 
         .footer-bottom {
-            text-align: center;
             padding-top: 2rem;
-            margin-top: 2rem;
             border-top: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        /* Alerts */
-        .alert {
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            border-left: 4px solid;
-        }
-
-        .alert-success {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: #10b981;
-            color: #10b981;
-        }
-
-        .alert-error {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: #ef4444;
-            color: #ef4444;
-        }
-
-        .alert-info {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: #3b82f6;
-            color: #3b82f6;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 1rem;
+            .hamburger-menu {
+                display: flex;
             }
 
             .nav-links {
-                gap: 1rem;
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.95);
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
             }
 
             .hero h1 {
                 font-size: 2.5rem;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs {
-                flex-direction: column;
+            .hero p {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -437,14 +409,23 @@
                 <img src="https://files.catbox.moe/504c99.png" alt="BNBNexa Logo">
                 <div class="logo-text">BNBNexa</div>
             </div>
-            <ul class="nav-links">
-                <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#invest"><i class="fas fa-chart-line"></i> Invest</a></li>
-                <li><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="#referral"><i class="fas fa-users"></i> Referral</a></li>
-                <li><a href="#security"><i class="fas fa-shield-alt"></i> Security</a></li>
-                <li><a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a></li>
+
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#invest">Invest</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#referral">Referral</a></li>
+                <li><a href="#how-to-join">How to Join</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#security">Security</a></li>
             </ul>
+
             <div class="wallet-section">
                 <button id="connectWallet" class="btn">
                     <i class="fas fa-wallet"></i> Connect Wallet
@@ -455,304 +436,322 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="container">
-            <!-- Home Section -->
-            <section id="home" class="tab-content active">
+        <!-- Home Section -->
+        <section id="home" class="section">
+            <div class="container">
                 <div class="hero">
-                    <h1>Welcome to BNBNexa</h1>
-                    <p>Professional BNB Staking Platform with 5-Level Referral System</p>
-                    <button class="btn" onclick="switchTab('invest')">
-                        <i class="fas fa-rocket"></i> Start Earning Now
+                    <h1>Your Gateway to Stable & Lucrative Yield Opportunities</h1>
+                    <p>Where Innovation Meets Stability — Farming Made Smarter on Binance Smart Chain</p>
+                    <button id="heroBtn" class="btn">
+                        <i class="fas fa-wallet"></i> Connect Wallet
                     </button>
                 </div>
 
                 <!-- Quick Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <i class="fas fa-wallet"></i>
-                        <h3>Total Balance</h3>
-                        <div class="stat-value" id="totalBalance">0 BNB</div>
-                        <p>Your total portfolio value</p>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-chart-line"></i>
+                        <i class="fas fa-chart-line fa-2x"></i>
                         <h3>Daily ROI</h3>
                         <div class="stat-value">2.5%</div>
-                        <p>Consistent daily returns</p>
+                        <p>Consistent Daily Returns</p>
                     </div>
                     <div class="stat-card">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-users fa-2x"></i>
                         <h3>Referral Levels</h3>
                         <div class="stat-value">5</div>
-                        <p>Multi-level commission</p>
+                        <p>Multi-Level Commission</p>
                     </div>
                     <div class="stat-card">
-                        <i class="fas fa-calendar"></i>
+                        <i class="fas fa-calendar fa-2x"></i>
                         <h3>Investment Period</h3>
                         <div class="stat-value">50 Days</div>
-                        <p>Maximum earning period</p>
+                        <p>Maximum Earning Period</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                        <h3>Secure</h3>
+                        <div class="stat-value">100%</div>
+                        <p>Blockchain Protected</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invest Section -->
+        <section id="invest" class="section" style="background: rgba(30, 41, 59, 0.5);">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Start Investing</h2>
+                    <p>Minimum investment: 0.01 BNB</p>
+                </div>
+
+                <div class="card" style="max-width: 500px; margin: 0 auto;">
+                    <div id="investContent">
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="depositAmount" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Amount (BNB)</label>
+                            <input type="number" id="depositAmount" class="form-control" step="0.001" min="0.01" placeholder="0.01" style="width: 100%; padding: 1rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; color: var(--light);">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="referralCodeInput" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Referral Code (Optional)</label>
+                            <input type="text" id="referralCodeInput" class="form-control" placeholder="Enter referral code" style="width: 100%; padding: 1rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; color: var(--light);">
+                        </div>
+
+                        <button id="investBtn" class="btn" style="width: 100%; justify-content: center;">
+                            <i class="fas fa-rocket"></i> Invest Now
+                        </button>
+                    </div>
+
+                    <div id="connectPrompt" style="text-align: center; display: none;">
+                        <i class="fas fa-wallet fa-3x" style="color: var(--accent); margin-bottom: 1rem;"></i>
+                        <h3 style="margin-bottom: 1rem;">Connect Your Wallet</h3>
+                        <p style="margin-bottom: 2rem; opacity: 0.8;">Please connect your wallet to start investing in BNBNexa</p>
+                        <button id="connectFromInvest" class="btn">
+                            <i class="fas fa-plug"></i> Connect Wallet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Investment Dashboard</h2>
+                    <p>Monitor your earnings and performance</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-coins fa-2x"></i>
+                        <h3>Active Deposit</h3>
+                        <div class="stat-value" id="activeDeposit">0 BNB</div>
+                        <p id="depositExpiry">Not Active</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-gem fa-2x"></i>
+                        <h3>ROI Bonus</h3>
+                        <div class="stat-value" id="roiBonus">0 BNB</div>
+                        <p>Available for withdrawal</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users fa-2x"></i>
+                        <h3>Referral Bonus</h3>
+                        <div class="stat-value" id="referralBonus">0 BNB</div>
+                        <p>From your network</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-wallet fa-2x"></i>
+                        <h3>Total Withdrawn</h3>
+                        <div class="stat-value" id="totalWithdrawn">0 BNB</div>
+                        <p>All time earnings</p>
                     </div>
                 </div>
 
-                <!-- Features -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-star"></i>
-                        <h2>Why Choose BNBNexa?</h2>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                        <div>
-                            <h3><i class="fas fa-shield-alt" style="color: var(--accent);"></i> Secure & Transparent</h3>
-                            <p>All transactions are recorded on the blockchain with full transparency and security.</p>
-                        </div>
-                        <div>
-                            <h3><i class="fas fa-bolt" style="color: var(--accent);"></i> High Performance</h3>
-                            <p>Earn 2.5% daily ROI with our optimized staking protocol.</p>
-                        </div>
-                        <div>
-                            <h3><i class="fas fa-network-wired" style="color: var(--accent);"></i> Referral Network</h3>
-                            <p>Build your team and earn commissions from 5 levels of referrals.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Invest Section -->
-            <section id="invest" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-chart-line"></i>
-                        <h2>Invest in BNB</h2>
-                    </div>
-                    
-                    <div class="wallet-info" id="walletInfo" style="display: none; margin-bottom: 2rem;">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i>
-                            <strong>Wallet Connected:</strong> <span id="walletAddress"></span> | 
-                            <strong>Status:</strong> <span id="registrationStatus"></span>
-                        </div>
-                        <div id="referralSection" style="display: none;">
-                            <div class="card" style="background: var(--gradient);">
-                                <h3><i class="fas fa-gift"></i> Your Referral Code</h3>
-                                <div style="text-align: center; padding: 1rem;">
-                                    <div style="font-size: 2rem; font-weight: bold;" id="userReferralCode"></div>
-                                    <p>Share this code to earn referral rewards!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="depositAmount"><i class="fas fa-coins"></i> Amount to Deposit (BNB)</label>
-                        <input type="number" id="depositAmount" class="form-control" step="0.001" min="0.01" placeholder="0.01">
-                        <small>Minimum deposit: 0.01 BNB</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="referralCodeInput"><i class="fas fa-user-friends"></i> Referral Code</label>
-                        <input type="text" id="referralCodeInput" class="form-control" placeholder="Enter referral code (required for new registration)">
-                    </div>
-
-                    <button id="depositBtn" class="btn btn-success" onclick="deposit()">
-                        <i class="fas fa-paper-plane"></i> Deposit BNB
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 400px; margin: 2rem auto;">
+                    <button id="withdrawRoiBtn" class="btn btn-success">
+                        <i class="fas fa-chart-line"></i> Withdraw ROI
                     </button>
-
-                    <div id="depositStatus" class="alert" style="display: none; margin-top: 1rem;"></div>
+                    <button id="withdrawRefBtn" class="btn btn-warning">
+                        <i class="fas fa-users"></i> Withdraw Referral
+                    </button>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <h2>Investment Dashboard</h2>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <h3>Total Investment</h3>
-                            <div class="stat-value" id="totalInvest">0 BNB</div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-gem"></i>
-                            <h3>Pending Rewards</h3>
-                            <div class="stat-value" id="pendingReward">0 BNB</div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-chart-pie"></i>
-                            <h3>Staking Rewards</h3>
-                            <div class="stat-value" id="pendingStaking">0 BNB</div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-hand-holding-usd"></i>
-                            <h3>Referral Rewards</h3>
-                            <div class="stat-value" id="pendingReferral">0 BNB</div>
-                        </div>
-                    </div>
+        <!-- Referral Section -->
+        <section id="referral" class="section" style="background: rgba(30, 41, 59, 0.5);">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Referral System</h2>
+                    <p>Earn from 5 levels of your network</p>
                 </div>
-            </section>
 
-            <!-- Referral Section -->
-            <section id="referral" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-users"></i>
-                        <h2>Referral System</h2>
+                <div class="level-income">
+                    <div class="level-card">
+                        <h3>Level 1</h3>
+                        <div class="level-percent">10%</div>
+                        <div class="stat-value" id="level1Income">0 BNB</div>
+                        <p>Team: <span id="level1Count">0</span> members</p>
                     </div>
-
-                    <div class="level-income">
-                        <div class="level-card">
-                            <h3>Level 1</h3>
-                            <div style="font-size: 1.5rem; color: var(--accent); margin: 1rem 0;">10%</div>
-                            <div class="stat-value" id="level1Income">0 BNB</div>
-                            <p>Direct Referrals: <span id="level1Count">0</span></p>
-                        </div>
-                        <div class="level-card">
-                            <h3>Level 2</h3>
-                            <div style="font-size: 1.5rem; color: var(--accent); margin: 1rem 0;">5%</div>
-                            <div class="stat-value" id="level2Income">0 BNB</div>
-                            <p>Second Level: <span id="level2Count">0</span></p>
-                        </div>
-                        <div class="level-card">
-                            <h3>Level 3</h3>
-                            <div style="font-size: 1.5rem; color: var(--accent); margin: 1rem 0;">3%</div>
-                            <div class="stat-value" id="level3Income">0 BNB</div>
-                            <p>Third Level: <span id="level3Count">0</span></p>
-                        </div>
-                        <div class="level-card">
-                            <h3>Level 4</h3>
-                            <div style="font-size: 1.5rem; color: var(--accent); margin: 1rem 0;">1%</div>
-                            <div class="stat-value" id="level4Income">0 BNB</div>
-                            <p>Fourth Level: <span id="level4Count">0</span></p>
-                        </div>
-                        <div class="level-card">
-                            <h3>Level 5</h3>
-                            <div style="font-size: 1.5rem; color: var(--accent); margin: 1rem 0;">1%</div>
-                            <div class="stat-value" id="level5Income">0 BNB</div>
-                            <p>Fifth Level: <span id="level5Count">0</span></p>
-                        </div>
+                    <div class="level-card">
+                        <h3>Level 2</h3>
+                        <div class="level-percent">5%</div>
+                        <div class="stat-value" id="level2Income">0 BNB</div>
+                        <p>Team: <span id="level2Count">0</span> members</p>
+                    </div>
+                    <div class="level-card">
+                        <h3>Level 3</h3>
+                        <div class="level-percent">3%</div>
+                        <div class="stat-value" id="level3Income">0 BNB</div>
+                        <p>Team: <span id="level3Count">0</span> members</p>
+                    </div>
+                    <div class="level-card">
+                        <h3>Level 4</h3>
+                        <div class="level-percent">1%</div>
+                        <div class="stat-value" id="level4Income">0 BNB</div>
+                        <p>Team: <span id="level4Count">0</span> members</p>
+                    </div>
+                    <div class="level-card">
+                        <h3>Level 5</h3>
+                        <div class="level-percent">1%</div>
+                        <div class="stat-value" id="level5Income">0 BNB</div>
+                        <p>Team: <span id="level5Count">0</span> members</p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Withdraw Section -->
-            <section id="withdraw" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-wallet"></i>
-                        <h2>Withdraw Earnings</h2>
-                    </div>
-
-                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
-                        <div class="stat-card">
-                            <i class="fas fa-gem"></i>
-                            <h3>Total Available</h3>
-                            <div class="stat-value" id="totalPendingReward">0 BNB</div>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-coins"></i>
-                            <h3>Ready to Claim</h3>
-                            <div class="stat-value" id="availableReward">0 BNB</div>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
-                        <button id="claimReferralBtn" class="btn btn-warning" onclick="claimReferral()">
-                            <i class="fas fa-users"></i> Claim Referral Rewards
-                        </button>
-                        <button id="withdrawStakingBtn" class="btn btn-success" onclick="withdrawStaking()">
-                            <i class="fas fa-chart-line"></i> Withdraw Staking Rewards
-                        </button>
-                    </div>
-
-                    <div id="withdrawStatus" class="alert" style="display: none; margin-top: 1rem;"></div>
+        <!-- How to Join Section -->
+        <section id="how-to-join" class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>How to Join BNBNexa</h2>
+                    <p>Start your journey in 3 simple steps</p>
                 </div>
-            </section>
 
-            <!-- Security Section -->
-            <section id="security" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-shield-alt"></i>
-                        <h2>Security Features</h2>
+                <div class="stats-grid">
+                    <div class="card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">1</div>
+                            <h3 style="margin-bottom: 1rem;">Connect Wallet</h3>
+                            <p>Connect your Binance Smart Chain compatible wallet like MetaMask or Trust Wallet</p>
+                        </div>
                     </div>
-                    <div style="display: grid; gap: 1.5rem;">
-                        <div>
-                            <h3><i class="fas fa-lock" style="color: var(--accent);"></i> Blockchain Security</h3>
-                            <p>All transactions are secured by Binance Smart Chain technology with transparent on-chain verification.</p>
+                    <div class="card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">2</div>
+                            <h3 style="margin-bottom: 1rem;">Make Deposit</h3>
+                            <p>Deposit minimum 0.01 BNB to activate your investment account and start earning</p>
                         </div>
-                        <div>
-                            <h3><i class="fas fa-code" style="color: var(--accent);"></i> Smart Contract Audits</h3>
-                            <p>Our contracts are thoroughly tested and verified for security and reliability.</p>
-                        </div>
-                        <div>
-                            <h3><i class="fas fa-user-shield" style="color: var(--accent);"></i> Wallet Protection</h3>
-                            <p>Your funds remain in your wallet. We never hold your private keys or personal information.</p>
+                    </div>
+                    <div class="card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">3</div>
+                            <h3 style="margin-bottom: 1rem;">Build Network</h3>
+                            <p>Share your referral code and earn commissions from 5 levels of your network</p>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- FAQ Section -->
-            <section id="faq" class="tab-content">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-question-circle"></i>
-                        <h2>Frequently Asked Questions</h2>
+        <!-- FAQ Section -->
+        <section id="faq" class="section" style="background: rgba(30, 41, 59, 0.5);">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Frequently Asked Questions</h2>
+                </div>
+
+                <div class="faq-container" style="max-width: 800px; margin: 0 auto;">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            What is the minimum investment?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            The minimum investment is 0.01 BNB. You can invest any amount above this minimum.
+                        </div>
                     </div>
-                    <div style="display: grid; gap: 1.5rem;">
-                        <div>
-                            <h3>What is the minimum deposit?</h3>
-                            <p>The minimum deposit is 0.01 BNB.</p>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            How much can I earn daily?
+                            <i class="fas fa-chevron-down"></i>
                         </div>
-                        <div>
-                            <h3>How much can I earn daily?</h3>
-                            <p>You earn 2.5% daily ROI on your deposited amount for 50 days.</p>
+                        <div class="faq-answer">
+                            You earn 2.5% daily ROI on your deposited amount for 50 days, totaling 125% return on investment.
                         </div>
-                        <div>
-                            <h3>How does the referral system work?</h3>
-                            <p>You earn commissions from 5 levels of your referral network with percentages ranging from 10% to 1%.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            How does the referral system work?
+                            <i class="fas fa-chevron-down"></i>
                         </div>
-                        <div>
-                            <h3>When can I withdraw my earnings?</h3>
-                            <p>You can withdraw your staking rewards anytime, and referral rewards can be claimed as they accumulate.</p>
+                        <div class="faq-answer">
+                            You earn commissions from 5 levels: 10% from level 1, 5% from level 2, 3% from level 3, and 1% from levels 4 & 5.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            When can I withdraw my earnings?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            You can withdraw ROI rewards anytime, and referral rewards can be claimed as they accumulate. There's no minimum withdrawal amount.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            Is my investment secure?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Yes, all transactions are secured by Binance Smart Chain technology and recorded on the blockchain for full transparency.
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- Security Section -->
+        <section id="security" class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Security & Contract Details</h2>
+                </div>
+
+                <div class="security-grid">
+                    <div class="security-card">
+                        <h3 style="margin-bottom: 1rem;"><i class="fas fa-file-contract"></i> Contract Name</h3>
+                        <p style="font-size: 1.2rem;">BNBNexa</p>
+                    </div>
+                    <div class="security-card">
+                        <h3 style="margin-bottom: 1rem;"><i class="fas fa-code"></i> Compiler Version</h3>
+                        <p style="font-size: 1.2rem;">v0.8.30+commit.73712a01</p>
+                    </div>
+                    <div class="security-card">
+                        <h3 style="margin-bottom: 1rem;"><i class="fas fa-cog"></i> Optimization</h3>
+                        <p style="font-size: 1.2rem;">No with 200 runs</p>
+                    </div>
+                    <div class="security-card">
+                        <h3 style="margin-bottom: 1rem;"><i class="fas fa-tools"></i> Other Settings</h3>
+                        <p style="font-size: 1.2rem;">London EvmVersion, MIT license</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="https://bscscan.com/address/0xc1465fdf616f63ba0dfa565ce918f13feed2b468#code" class="btn" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> View on BSCScan
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-section">
-                <h3>BNBNexa</h3>
-                <p>Professional BNB staking platform with advanced referral system and secure blockchain technology.</p>
+            <div class="footer-logo">
+                <img src="https://files.catbox.moe/504c99.png" alt="BNBNexa Logo">
             </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul style="list-style: none;">
-                    <li><a href="#home" style="color: var(--light); text-decoration: none;">Home</a></li>
-                    <li><a href="#invest" style="color: var(--light); text-decoration: none;">Invest</a></li>
-                    <li><a href="#dashboard" style="color: var(--light); text-decoration: none;">Dashboard</a></li>
-                    <li><a href="#referral" style="color: var(--light); text-decoration: none;">Referral</a></li>
-                </ul>
+            <div class="footer-subtitle">
+                Where Innovation Meets Stability — Farming Made Smarter on Binance Smart Chain
             </div>
-            <div class="footer-section">
-                <h3>Support</h3>
-                <ul style="list-style: none;">
-                    <li><a href="#security" style="color: var(--light); text-decoration: none;">Security</a></li>
-                    <li><a href="#faq" style="color: var(--light); text-decoration: none;">FAQ</a></li>
-                    <li><a href="#" style="color: var(--light); text-decoration: none;">Contact</a></li>
-                    <li><a href="#" style="color: var(--light); text-decoration: none;">Terms of Service</a></li>
-                </ul>
+            
+            <div class="social-links">
+                <a href="#" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 BNBNexa. All rights reserved. Built on Binance Smart Chain.</p>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 BNBNexa. All rights reserved. Built on Binance Smart Chain.</p>
+            </div>
         </div>
     </footer>
 
