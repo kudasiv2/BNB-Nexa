@@ -50,6 +50,7 @@
             z-index: 1000;
             box-shadow: var(--glow);
             backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .header-content {
@@ -108,7 +109,7 @@
             position: fixed;
             top: 80px;
             right: 0;
-            background-color: var(--navy-light);
+            background-color: rgba(26, 31, 59, 0.95);
             width: 250px;
             height: calc(100vh - 80px);
             transform: translateX(100%);
@@ -116,6 +117,7 @@
             box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
             z-index: 999;
             padding: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .nav-menu.active {
@@ -222,6 +224,8 @@
             text-align: center;
             width: 100%;
             max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .wallet-address {
@@ -274,16 +278,19 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, var(--navy-light) 0%, var(--purple) 100%);
+            background: linear-gradient(135deg, rgba(26, 31, 59, 0.8) 0%, rgba(106, 17, 203, 0.6) 100%);
             border-radius: 15px;
             padding: 25px;
             text-align: center;
             box-shadow: var(--glow);
             transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .stat-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4);
         }
 
         .stat-value {
@@ -327,16 +334,19 @@
             transition: var(--transition);
             border: 2px solid transparent;
             cursor: pointer;
+            backdrop-filter: blur(10px);
         }
 
         .plan-card:hover {
             transform: translateY(-10px);
             border-color: var(--purple);
+            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4);
         }
 
         .plan-card.active {
             border-color: var(--purple);
             box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+            transform: translateY(-5px);
         }
 
         .plan-name {
@@ -369,6 +379,8 @@
             max-width: 600px;
             margin: 0 auto;
             box-shadow: var(--glow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .form-group {
@@ -436,6 +448,14 @@
             padding: 25px;
             box-shadow: var(--glow);
             text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(138, 43, 226, 0.4);
         }
 
         .dashboard-card h3 {
@@ -482,16 +502,19 @@
         }
 
         .referral-card {
-            background: linear-gradient(135deg, var(--navy-light) 0%, var(--purple) 100%);
+            background: linear-gradient(135deg, rgba(26, 31, 59, 0.8) 0%, rgba(106, 17, 203, 0.6) 100%);
             border-radius: 15px;
             padding: 25px;
             text-align: center;
             box-shadow: var(--glow);
             transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .referral-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4);
         }
 
         .referral-level {
@@ -517,6 +540,8 @@
             padding: 25px;
             box-shadow: var(--glow);
             text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .referral-link-container {
@@ -560,6 +585,14 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: var(--glow);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(138, 43, 226, 0.4);
         }
 
         .step-number {
@@ -597,6 +630,8 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: var(--glow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .faq-question {
@@ -646,6 +681,7 @@
             background-color: var(--navy);
             padding: 50px 0 20px;
             text-align: center;
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         .footer-logo {
@@ -730,6 +766,7 @@
             transition: var(--transition);
             text-align: center;
             max-width: 90%;
+            backdrop-filter: blur(10px);
         }
 
         .toast.show {
@@ -760,6 +797,8 @@
             text-align: center;
             box-shadow: var(--glow);
             animation: modalFadeIn 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
         }
 
         @keyframes modalFadeIn {
@@ -987,7 +1026,7 @@
                     <div class="dashboard-card">
                         <h3>Total Withdraw</h3>
                         <div class="dashboard-value" id="totalWithdraw">0 BNB</div>
-                        <p>ROI + Referral Earnings</p>
+                        <p>ROI Earnings</p>
                     </div>
                     <div class="dashboard-card">
                         <h3>Available ROI</h3>
@@ -1000,10 +1039,7 @@
                     <div class="dashboard-card">
                         <h3>Referral Bonus</h3>
                         <div class="dashboard-value" id="referralBonus">0 BNB</div>
-                        <p>Ready to Withdraw</p>
-                        <button class="btn btn-secondary" id="withdrawReferral" style="margin-top: 15px;">
-                            <i class="fas fa-users"></i> Withdraw Referral
-                        </button>
+                        <p>Referral Earnings</p>
                     </div>
                 </div>
             </div>
@@ -1081,7 +1117,7 @@
                         <div class="step-number">4</div>
                         <div class="step-content">
                             <h3>Withdraw Anytime</h3>
-                            <p>Withdraw your ROI earnings or referral bonuses at any time directly to your connected wallet. No lock-in period for withdrawals.</p>
+                            <p>Withdraw your ROI earnings at any time directly to your connected wallet. No lock-in period for withdrawals.</p>
                         </div>
                     </div>
                     <div class="step">
@@ -1133,7 +1169,7 @@
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="faq-answer">
-                            You can withdraw your ROI earnings and referral bonuses at any time. There are no restrictions on withdrawals.
+                            You can withdraw your ROI earnings at any time. There are no restrictions on withdrawals.
                         </div>
                     </div>
                     <div class="faq-item">
@@ -1279,7 +1315,6 @@
         const depositExpiry = document.getElementById('depositExpiry');
         const totalWithdraw = document.getElementById('totalWithdraw');
         const withdrawROIBtn = document.getElementById('withdrawROI');
-        const withdrawReferralBtn = document.getElementById('withdrawReferral');
         const level1Count = document.getElementById('level1Count');
         const level2Count = document.getElementById('level2Count');
         const level3Count = document.getElementById('level3Count');
@@ -1373,9 +1408,8 @@
             // Invest button
             investButton.addEventListener('click', invest);
 
-            // Withdraw buttons
+            // Withdraw ROI button
             withdrawROIBtn.addEventListener('click', withdrawROI);
-            withdrawReferralBtn.addEventListener('click', withdrawReferral);
 
             // Copy referral link
             copyReferralLinkBtn.addEventListener('click', copyReferralLink);
@@ -1619,12 +1653,6 @@
                 withdrawROIBtn.innerHTML = '<i class="fas fa-hand-holding-usd"></i> Withdraw ROI';
                 withdrawROIBtn.disabled = false;
             }
-        }
-
-        // Withdraw referral function
-        async function withdrawReferral() {
-            // In this contract, both ROI and referral are withdrawn with the same function
-            await withdrawROI();
         }
 
         // Copy referral link to clipboard
