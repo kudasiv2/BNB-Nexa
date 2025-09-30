@@ -945,7 +945,7 @@
                     </div>
                 </div>
 
-                <h2 class="section-title">Make Investment</h2>
+                <h2 class="section-title" id="make-investment">Make Investment</h2>
                 <div class="invest-box">
                     <div class="form-group">
                         <label for="depositAmount">Deposit Amount (BNB)</label>
@@ -1357,6 +1357,12 @@
                     
                     // Recalculate returns if deposit amount is set
                     calculateReturns();
+                    
+                    // Auto-scroll to Make Investment section
+                    document.getElementById('make-investment').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 });
             });
 
