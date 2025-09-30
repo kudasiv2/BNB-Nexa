@@ -1039,9 +1039,9 @@
                     
                     <div class="referral-link-box">
                         <h3>Your Referral Link</h3>
-                        <p>Share this link to earn referral bonuses</p>
+                        <p>Share this link to get referral bonuses from 4 levels with a potential bonus of up to 10%!</p>
                         <div class="referral-link-container">
-                            <div class="referral-link" id="referralLinkText">Connect wallet to get your referral link</div>
+                            <div class="referral-link" id="referralLinkText">Connect wallet to get your referral link!</div>
                             <button class="btn btn-copy" id="copyReferralLink">
                                 <i class="fas fa-copy"></i> Copy
                             </button>
@@ -1440,7 +1440,7 @@
                     showToast('Wallet connected successfully!');
                 } catch (error) {
                     console.error('User denied account access', error);
-                    showToast('Please connect your wallet to continue.');
+                    showToast('Please connect your wallet to continue!');
                 }
             } else {
                 showToast('Please install MetaMask to use this dApp!');
@@ -1484,9 +1484,9 @@
             if (refAddress) {
                 // In a real implementation, you would save this to the contract
                 uplineAddressValue.textContent = `${refAddress.substring(0, 6)}...${refAddress.substring(refAddress.length - 4)}`;
-                showToast('Referral link detected! Upline address saved.');
+                showToast('Referral link detected!');
             } else {
-                uplineAddressValue.textContent = 'No referral detected';
+                uplineAddressValue.textContent = 'No referral detected!';
             }
         }
 
@@ -1498,7 +1498,7 @@
                 // Validate amount against plan minimum
                 const minAmount = planMinAmounts[selectedPlan];
                 if (amount < minAmount) {
-                    showToast(`Minimum amount for ${selectedPlanElement.textContent} is ${minAmount} BNB`);
+                    showToast(`Minimum amount for ${selectedPlanElement.textContent} is ${minAmount} BNB!`);
                     return;
                 }
                 
@@ -1523,12 +1523,12 @@
             
             const amount = depositAmountInput.value;
             if (!amount || parseFloat(amount) < 0.01) {
-                showToast('Please enter a valid amount (minimum 0.01 BNB)');
+                showToast('Please enter a valid amount (minimum 0.01 BNB)!');
                 return;
             }
             
             if (selectedPlan === 0) {
-                showToast('Please select an investment plan');
+                showToast('Please select an investment plan!');
                 return;
             }
             
@@ -1558,7 +1558,7 @@
                 // Call invest function with referrer address
                 const tx = await contract.invest(referrerAddress, { value: amountWei });
                 
-                showToast('Transaction submitted. Waiting for confirmation...');
+                showToast('Transaction submitted!');
                 
                 // Wait for transaction to be mined
                 await tx.wait();
@@ -1580,7 +1580,7 @@
                 
             } catch (error) {
                 console.error('Investment failed:', error);
-                showToast('Investment failed. Please try again.');
+                showToast('Investment failed!');
             } finally {
                 investButton.innerHTML = '<i class="fas fa-piggy-bank"></i> Invest Now';
                 investButton.disabled = false;
@@ -1590,7 +1590,7 @@
         // Withdraw ROI function
         async function withdrawROI() {
             if (!userAddress) {
-                showToast('Please connect your wallet first');
+                showToast('Please connect your wallet first!');
                 return;
             }
             
@@ -1601,7 +1601,7 @@
                 // Call withdraw function
                 const tx = await contract.withdraw();
                 
-                showToast('Withdrawal submitted. Waiting for confirmation...');
+                showToast('Withdrawal submitted!');
                 
                 // Wait for transaction to be mined
                 await tx.wait();
@@ -1614,7 +1614,7 @@
                 
             } catch (error) {
                 console.error('Withdrawal failed:', error);
-                showToast('Withdrawal failed. Please try again.');
+                showToast('Withdrawal failed!');
             } finally {
                 withdrawROIBtn.innerHTML = '<i class="fas fa-hand-holding-usd"></i> Withdraw ROI';
                 withdrawROIBtn.disabled = false;
@@ -1630,7 +1630,7 @@
         // Copy referral link to clipboard
         function copyReferralLink() {
             if (!userAddress) {
-                showToast('Please connect your wallet first');
+                showToast('Please connect your wallet first!');
                 return;
             }
             
@@ -1680,7 +1680,7 @@
                 if (parseFloat(depositBNB) > 0) {
                     depositExpiry.textContent = `Duration: ${daysLeft} Days Left`;
                 } else {
-                    depositExpiry.textContent = 'No Active Deposit';
+                    depositExpiry.textContent = 'No Active Deposit!';
                 }
                 
                 // Update upline address if available
