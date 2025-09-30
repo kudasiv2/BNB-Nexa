@@ -227,6 +227,22 @@
             font-family: monospace;
             margin-bottom: 15px;
             word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .upline-address {
+            font-family: monospace;
+            margin-bottom: 20px;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--gray);
         }
 
         .blinking-dot {
@@ -235,7 +251,6 @@
             height: 10px;
             background-color: #00ff00;
             border-radius: 50%;
-            margin-right: 8px;
             animation: blink 1.5s infinite;
         }
 
@@ -872,7 +887,8 @@
                             <span class="blinking-dot"></span>
                             Connected: <span id="walletAddress"></span>
                         </p>
-                        <p id="uplineAddress" style="margin-bottom: 20px; font-size: 0.9rem; color: var(--gray);">
+                        <p class="upline-address">
+                            <span class="blinking-dot"></span>
                             Upline: <span id="uplineAddressValue">Not available</span>
                         </p>
                         <button class="btn" id="investNow">
@@ -1428,11 +1444,10 @@
         async function setupWeb3(account) {
             userAddress = account;
             
-            // Update UI
+            // Update UI - HIDE the connect button and show wallet info
             walletAddress.textContent = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
             walletInfo.style.display = 'block';
-            connectWalletBtn.innerHTML = '<i class="fas fa-check"></i> Connected';
-            connectWalletBtn.disabled = true;
+            connectWalletBtn.style.display = 'none'; // Hide the connect button
             
             // Hide invest warning
             investWarning.style.display = 'none';
