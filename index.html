@@ -448,11 +448,6 @@
             min-width: 180px;
         }
 
-        .btn-withdraw .amount {
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
         .btn-secondary {
             background: linear-gradient(to right, var(--navy-light), var(--purple));
         }
@@ -529,6 +524,7 @@
         .btn-copy {
             border-radius: 0 10px 10px 0;
             padding: 12px 20px;
+            text-align: center;
         }
 
         /* How to Join Section */
@@ -868,6 +864,9 @@
                 <div class="section-content">
                     <h1 class="headline">BNBNexa</h1>
                     <p class="subheadline">Where Innovation Meets Stability – Farming Made Smarter on Binance Smart Chain</p>
+                    <button class="btn" id="connectWallet">
+                        <i class="fas fa-wallet"></i> Connect Wallet
+                    </button>
                     <div id="walletInfo" class="wallet-info" style="display: none;">
                         <p class="wallet-address">
                             <span class="blinking-dot"></span>
@@ -977,25 +976,17 @@
                         <h3>Available ROI</h3>
                         <div class="dashboard-value" id="availableROI">0 BNB</div>
                         <p>Ready to Withdraw</p>
+                        <button class="btn" id="withdrawROI" style="margin-top: 15px;">
+                            <i class="fas fa-hand-holding-usd"></i> Withdraw ROI
+                        </button>
                     </div>
                     <div class="dashboard-card">
                         <h3>Referral Bonus</h3>
                         <div class="dashboard-value" id="referralBonus">0 BNB</div>
-                        <p>Total Referral Earnings</p>
-                    </div>
-                </div>
-                <div class="btn-group">
-                    <div class="btn-withdraw">
-                        <button class="btn" id="withdrawROI">
-                            <i class="fas fa-hand-holding-usd"></i> Withdraw ROI
-                        </button>
-                        <div class="amount" id="roiAmount">0 BNB available</div>
-                    </div>
-                    <div class="btn-withdraw">
-                        <button class="btn btn-secondary" id="withdrawReferral">
+                        <p>Ready to Withdraw</p>
+                        <button class="btn btn-secondary" id="withdrawReferral" style="margin-top: 15px;">
                             <i class="fas fa-users"></i> Withdraw Referral
                         </button>
-                        <div class="amount" id="referralAmount">0 BNB available</div>
                     </div>
                 </div>
             </div>
@@ -1034,7 +1025,7 @@
                         <p>Share this link to earn referral bonuses</p>
                         <div class="referral-link-container">
                             <div class="referral-link" id="referralLinkText">Connect wallet to get your referral link</div>
-                            <button class="btn btn-copy" id="copyReferralLink" style="text-align: center;">
+                            <button class="btn btn-copy" id="copyReferralLink">
                                 <i class="fas fa-copy"></i> Copy
                             </button>
                         </div>
@@ -1254,6 +1245,7 @@
         // DOM Elements
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
+        const connectWalletBtn = document.getElementById('connectWallet');
         const walletInfo = document.getElementById('walletInfo');
         const walletAddress = document.getElementById('walletAddress');
         const uplineAddressValue = document.getElementById('uplineAddressValue');
@@ -1271,8 +1263,6 @@
         const totalWithdraw = document.getElementById('totalWithdraw');
         const withdrawROIBtn = document.getElementById('withdrawROI');
         const withdrawReferralBtn = document.getElementById('withdrawReferral');
-        const roiAmount = document.getElementById('roiAmount');
-        const referralAmount = document.getElementById('referralAmount');
         const level1Count = document.getElementById('level1Count');
         const level2Count = document.getElementById('level2Count');
         const level3Count = document.getElementById('level3Count');
@@ -1325,8 +1315,8 @@
                 });
             });
 
-            // Connect wallet automatically
-            connectWallet();
+            // Connect wallet button
+            connectWalletBtn.addEventListener('click', connectWallet);
 
             // Invest now button (home page)
             investNowBtn.addEventListener('click', function() {
@@ -1392,6 +1382,9 @@
                     }
                 });
             });
+
+            // Check if wallet is already connected
+            checkWalletConnection();
         });
 
         // Show toast notification
@@ -1402,6 +1395,16 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, duration);
+        }
+
+        // Check if wallet is already connected
+        async function checkWalletConnection() {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    await setupWeb3(accounts[0]);
+                }
+            }
         }
 
         // Connect wallet function
@@ -1428,6 +1431,8 @@
             // Update UI
             walletAddress.textContent = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
             walletInfo.style.display = 'block';
+            connectWalletBtn.innerHTML = '<i class="fas fa-check"></i> Connected';
+            connectWalletBtn.disabled = true;
             
             // Hide invest warning
             investWarning.style.display = 'none';
@@ -1636,10 +1641,6 @@
                 availableROI.textContent = `${parseFloat(availableROIBNB).toFixed(4)} BNB`;
                 referralBonus.textContent = `${parseFloat(referralBonusBNB).toFixed(4)} BNB`;
                 totalWithdraw.textContent = `${parseFloat(totalWithdrawnBNB).toFixed(4)} BNB`;
-                
-                // Update withdrawal amounts
-                roiAmount.textContent = `${parseFloat(availableROIBNB).toFixed(4)} BNB available`;
-                referralAmount.textContent = `${parseFloat(referralBonusBNB).toFixed(4)} BNB available`;
                 
                 // Update referral counts
                 level1Count.textContent = `${userInfo.referralCount.toString()} Members`;
