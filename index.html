@@ -184,6 +184,7 @@
         .btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             padding: 15px 30px;
             background: linear-gradient(to right, var(--purple), var(--purple-light));
@@ -309,6 +310,7 @@
             box-shadow: var(--glow);
             transition: var(--transition);
             border: 2px solid transparent;
+            cursor: pointer;
         }
 
         .plan-card:hover {
@@ -703,20 +705,23 @@
         .toast {
             position: fixed;
             bottom: 20px;
-            right: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             padding: 15px 25px;
             background-color: var(--purple);
             color: white;
             border-radius: 10px;
             box-shadow: var(--glow);
             z-index: 1002;
-            transform: translateY(100px);
+            transform: translate(-50%, 100px);
             opacity: 0;
             transition: var(--transition);
+            text-align: center;
+            max-width: 90%;
         }
 
         .toast.show {
-            transform: translateY(0);
+            transform: translate(-50%, 0);
             opacity: 1;
         }
 
@@ -863,9 +868,6 @@
                 <div class="section-content">
                     <h1 class="headline">BNBNexa</h1>
                     <p class="subheadline">Where Innovation Meets Stability – Farming Made Smarter on Binance Smart Chain</p>
-                    <button class="btn" id="connectWallet">
-                        <i class="fas fa-wallet"></i> Connect Wallet
-                    </button>
                     <div id="walletInfo" class="wallet-info" style="display: none;">
                         <p class="wallet-address">
                             <span class="blinking-dot"></span>
@@ -949,7 +951,7 @@
                     <div id="investWarning" class="warning" style="display: none;">
                         Connect Wallet to Get Started!
                     </div>
-                    <button class="btn" id="investButton" style="width: 100%;">
+                    <button class="btn" id="investButton" style="width: 100%; text-align: center;">
                         <i class="fas fa-piggy-bank"></i> Invest Now
                     </button>
                 </div>
@@ -1032,7 +1034,7 @@
                         <p>Share this link to earn referral bonuses</p>
                         <div class="referral-link-container">
                             <div class="referral-link" id="referralLinkText">Connect wallet to get your referral link</div>
-                            <button class="btn btn-copy" id="copyReferralLink">
+                            <button class="btn btn-copy" id="copyReferralLink" style="text-align: center;">
                                 <i class="fas fa-copy"></i> Copy
                             </button>
                         </div>
@@ -1242,10 +1244,16 @@
             3: 0.015 // 1.5% daily
         };
 
+        // Plan minimum amounts
+        const planMinAmounts = {
+            1: 0.01, // Basic Plan
+            2: 1,    // Standard Plan
+            3: 5     // Premium Plan
+        };
+
         // DOM Elements
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
-        const connectWalletBtn = document.getElementById('connectWallet');
         const walletInfo = document.getElementById('walletInfo');
         const walletAddress = document.getElementById('walletAddress');
         const uplineAddressValue = document.getElementById('uplineAddressValue');
@@ -1317,8 +1325,8 @@
                 });
             });
 
-            // Connect wallet button
-            connectWalletBtn.addEventListener('click', connectWallet);
+            // Connect wallet automatically
+            connectWallet();
 
             // Invest now button (home page)
             investNowBtn.addEventListener('click', function() {
@@ -1335,6 +1343,12 @@
                     // Update selected plan
                     selectedPlan = parseInt(this.getAttribute('data-plan'));
                     selectedPlanElement.textContent = this.querySelector('.plan-name').textContent;
+                    
+                    // Update minimum deposit amount based on plan
+                    const minAmount = planMinAmounts[selectedPlan];
+                    depositAmountInput.min = minAmount;
+                    depositAmountInput.placeholder = `Minimum ${minAmount} BNB`;
+                    
                     // Recalculate returns if deposit amount is set
                     calculateReturns();
                 });
@@ -1378,9 +1392,6 @@
                     }
                 });
             });
-
-            // Check if wallet is already connected
-            checkWalletConnection();
         });
 
         // Show toast notification
@@ -1391,16 +1402,6 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, duration);
-        }
-
-        // Check if wallet is already connected
-        async function checkWalletConnection() {
-            if (typeof window.ethereum !== 'undefined') {
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                if (accounts.length > 0) {
-                    await setupWeb3(accounts[0]);
-                }
-            }
         }
 
         // Connect wallet function
@@ -1427,8 +1428,6 @@
             // Update UI
             walletAddress.textContent = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
             walletInfo.style.display = 'block';
-            connectWalletBtn.innerHTML = '<i class="fas fa-check"></i> Connected';
-            connectWalletBtn.disabled = true;
             
             // Hide invest warning
             investWarning.style.display = 'none';
@@ -1469,6 +1468,13 @@
             const amount = parseFloat(depositAmountInput.value) || 0;
             
             if (amount >= 0.01 && selectedPlan > 0) {
+                // Validate amount against plan minimum
+                const minAmount = planMinAmounts[selectedPlan];
+                if (amount < minAmount) {
+                    showToast(`Minimum amount for ${selectedPlanElement.textContent} is ${minAmount} BNB`);
+                    return;
+                }
+                
                 const dailyRate = planRates[selectedPlan];
                 const daily = amount * dailyRate;
                 const total = daily * 120; // 120 days
@@ -1496,6 +1502,13 @@
             
             if (selectedPlan === 0) {
                 showToast('Please select an investment plan');
+                return;
+            }
+            
+            // Validate amount against plan minimum
+            const minAmount = planMinAmounts[selectedPlan];
+            if (parseFloat(amount) < minAmount) {
+                showToast(`Minimum amount for ${selectedPlanElement.textContent} is ${minAmount} BNB`);
                 return;
             }
             
